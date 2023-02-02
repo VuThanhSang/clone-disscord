@@ -1,0 +1,58 @@
+.wrapper {
+    background-color: rgb(47, 49, 54);
+    width: 240px;
+    height: 100vh;
+    position: relative;
+    .server-name {
+        height: 48px;
+        border-bottom: 0.1px solid black;
+        color: #fff;
+        cursor: pointer;
+        :hover {
+            background-color: lighten($color: rgb(47, 49, 54), $amount: 5);
+        }
+        span {
+            height: 100%;
+            display: flex;
+            font-size: 20px;
+            padding: 5px;
+            padding-left: 10px;
+            .icon {
+                position: absolute;
+                margin: auto;
+                right: 10px;
+                top: 10px;
+            }
+        }
+    }
+    .channel {
+    }
+    .control {
+        bottom: 1px;
+        height: 48px;
+        width: 100%;
+        border-top: 0.1px solid black;
+        position: absolute;
+        color: #fff;
+        display: flex;
+        .info {
+            cursor: pointer;
+            width: 150px;
+            margin: 5px;
+            display: flex;
+            .name {
+                font-size: 12px;
+                margin-left: 5px;
+                // display: ;
+            }
+        }
+        .icon {
+            cursor: pointer;
+            margin: auto;
+            font-size: 22px;
+        }
+        :hover {
+            background-color: lighten($color: rgb(47, 49, 54), $amount: 5);
+        }
+    }
+}
