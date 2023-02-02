@@ -1,6 +1,5 @@
 import classNames from 'classnames/bind';
 import styles from './subSideBar.module.scss';
-import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import Avatar from '@mui/material/Avatar';
 import MicIcon from '@mui/icons-material/Mic';
 import HeadphonesIcon from '@mui/icons-material/Headphones';
@@ -12,25 +11,30 @@ import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import Collapse from '@mui/material/Collapse';
-import InboxIcon from '@mui/icons-material/MoveToInbox';
-import DraftsIcon from '@mui/icons-material/Drafts';
-import SendIcon from '@mui/icons-material/Send';
 import ExpandLess from '@mui/icons-material/ExpandLess';
 import ExpandMore from '@mui/icons-material/ExpandMore';
 import StarBorder from '@mui/icons-material/StarBorder';
+import VolumeUpIcon from '@mui/icons-material/VolumeUp';
+import TagIcon from '@mui/icons-material/Tag';
 import { useState } from 'react';
 const cx = classNames.bind(styles);
 function SubSideBar() {
-    const [open, setOpen] = useState(true);
+    const [openChat, setOpenChat] = useState(true);
 
-    const handleClick = () => {
-        setOpen(!open);
+    const handleClickChat = () => {
+        setOpenChat(!openChat);
     };
+    const [openVoice, setOpenVoice] = useState(true);
+
+    const handleClickVoice = () => {
+        setOpenVoice(!openVoice);
+    };
+
     return (
         <div className={cx('wrapper')}>
             <div className={cx('server-name')}>
                 <span>
-                    <p>SxS</p> <ArrowDownwardIcon className={cx('icon')}></ArrowDownwardIcon>
+                    <p>SxS</p> <ExpandMore className={cx('icon')}></ExpandMore>
                 </span>
             </div>
 
@@ -44,11 +48,11 @@ function SubSideBar() {
                     component="nav"
                     aria-labelledby="nested-list-subheader"
                 >
-                    <ListItemButton onClick={handleClick}>
-                        {open ? (
-                            <ExpandLess sx={{ color: 'rgb(150,152,157)', fontSize: 14 }} />
+                    <ListItemButton onClick={handleClickChat}>
+                        {openChat ? (
+                            <ExpandLess sx={{ color: 'rgb(150,152,157)', fontSize: 25 }} />
                         ) : (
-                            <ExpandMore sx={{ color: 'rgb(150,152,157)', fontSize: 14 }} />
+                            <ExpandMore sx={{ color: 'rgb(150,152,157)', fontSize: 25 }} />
                         )}
                         {/* <p style={{ marginLeft: 0.5, fontSize: 15 }}>KÊNH CHAT</p> */}
                         <ListItemText
@@ -58,20 +62,122 @@ function SubSideBar() {
                                 '&:hover': { color: '#fff' },
                             }}
                             primaryTypographyProps={{
-                                fontSize: 12,
+                                fontSize: 13,
                                 fontWeight: 'medium',
                                 letterSpacing: 0,
                             }}
                             primary="KÊNH CHAT"
                         />
                     </ListItemButton>
-                    <Collapse in={open} timeout="auto" unmountOnExit>
+                    <Collapse in={openChat} timeout="auto" unmountOnExit>
                         <List component="div" disablePadding>
                             <ListItemButton sx={{ pl: 4 }}>
-                                <ListItemIcon>
-                                    <StarBorder />
-                                </ListItemIcon>
-                                <ListItemText primary="Starred" />
+                                <TagIcon sx={{ color: 'rgb(150,152,157)', fontSize: 25 }} />
+                                <ListItemText
+                                    sx={{
+                                        marginLeft: 0.5,
+
+                                        '&:hover': { color: '#fff' },
+                                    }}
+                                    primaryTypographyProps={{
+                                        fontSize: 13,
+                                        fontWeight: 'medium',
+                                        letterSpacing: 0,
+                                    }}
+                                    primary="Starred"
+                                />
+                            </ListItemButton>
+                        </List>
+                    </Collapse>
+                    <Collapse in={openChat} timeout="auto" unmountOnExit>
+                        <List component="div" disablePadding>
+                            <ListItemButton sx={{ pl: 4 }}>
+                                <TagIcon sx={{ color: 'rgb(150,152,157)', fontSize: 25 }} />
+                                <ListItemText
+                                    sx={{
+                                        marginLeft: 0.5,
+
+                                        '&:hover': { color: '#fff' },
+                                    }}
+                                    primaryTypographyProps={{
+                                        fontSize: 13,
+                                        fontWeight: 'medium',
+                                        letterSpacing: 0,
+                                    }}
+                                    primary="Starred"
+                                />
+                            </ListItemButton>
+                        </List>
+                    </Collapse>
+                </List>
+
+                <List
+                    sx={{
+                        width: '100%',
+                        bgcolor: 'rgb(47,49,54)',
+                        color: 'rgb(150,152,157)',
+                    }}
+                    component="nav"
+                    aria-labelledby="nested-list-subheader"
+                >
+                    <ListItemButton onClick={handleClickVoice}>
+                        {openVoice ? (
+                            <ExpandLess sx={{ color: 'rgb(150,152,157)', fontSize: 25 }} />
+                        ) : (
+                            <ExpandMore sx={{ color: 'rgb(150,152,157)', fontSize: 25 }} />
+                        )}
+                        {/* <p style={{ marginLeft: 0.5, fontSize: 15 }}>KÊNH CHAT</p> */}
+                        <ListItemText
+                            sx={{
+                                marginLeft: 0.5,
+
+                                '&:hover': { color: '#fff' },
+                            }}
+                            primaryTypographyProps={{
+                                fontSize: 13,
+                                fontWeight: 'medium',
+                                letterSpacing: 0,
+                            }}
+                            primary="KÊNH THOẠI"
+                        />
+                    </ListItemButton>
+                    <Collapse in={openVoice} timeout="auto" unmountOnExit>
+                        <List component="div" disablePadding>
+                            <ListItemButton sx={{ pl: 4 }}>
+                                <VolumeUpIcon sx={{ color: 'rgb(150,152,157)', fontSize: 25 }} />
+                                <ListItemText
+                                    sx={{
+                                        marginLeft: 0.5,
+
+                                        '&:hover': { color: '#fff' },
+                                    }}
+                                    primaryTypographyProps={{
+                                        fontSize: 13,
+                                        fontWeight: 'medium',
+                                        letterSpacing: 0,
+                                    }}
+                                    primary="Starred"
+                                />
+                            </ListItemButton>
+                        </List>
+                    </Collapse>
+                    <Collapse in={openVoice} timeout="auto" unmountOnExit>
+                        <List component="div" disablePadding>
+                            <ListItemButton sx={{ pl: 4 }}>
+                                <VolumeUpIcon sx={{ color: 'rgb(150,152,157)', fontSize: 25 }} />
+                                <ListItemText
+                                    sx={{
+                                        marginLeft: 0.5,
+
+                                        '&:hover': { color: '#fff' },
+                                    }}
+                                    primaryTypographyProps={{
+                                        fontSize: 13,
+                                        fontWeight: 'medium',
+                                        letterSpacing: 0,
+                                    }}
+                                    primary="Starred"
+                                />
                             </ListItemButton>
                         </List>
                     </Collapse>
