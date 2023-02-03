@@ -1,0 +1,23 @@
+.member-list {
+    color: white;
+    position: absolute;
+    right: 0;
+    height: 100vh;
+    overflow: auto;
+    background-color: rgb(47, 49, 54);
+    width: 22.5%;
+    padding: 20px;
+    .member-type {
+        font-size: 17px;
+        color: rgb(150, 152, 157);
+
+        .user {
+            font-size: 16px;
+            display: flex;
+            margin: 5px;
+            p {
+                color: rgb(150, 152, 157);
+            }
+        }
+    }
+}

@@ -2,27 +2,5 @@
     background-color: rgb(54, 57, 63);
     height: 100%;
     position: relative;
-    .header {
-        height: 48px;
-        border-bottom: 0.1px solid black;
-        color: #fff;
-        cursor: pointer;
-        display: flex;
-        justify-content: space-between;
-        // :hover {
-        //     background-color: lighten($color: rgb(47, 49, 54), $amount: 5);
-        // }
-        .server-name {
-            display: flex;
-            font-size: 18px;
-            align-items: center;
-        }
-        .icon {
-            margin: 10px;
-        }
-        .option {
-            display: flex;
-            align-items: center;
-        }
-    }
+    overflow: hidden;
 }

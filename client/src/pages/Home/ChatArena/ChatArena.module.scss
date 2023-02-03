@@ -1,0 +1,75 @@
+.chat-arena {
+    height: 100vh;
+    position: relative;
+    .chat-bar {
+        position: absolute;
+        top: 83%;
+        border-radius: 10px;
+        background-color: rgb(64, 68, 75);
+        color: rgb(220, 221, 222);
+        display: flex;
+        // justify-content: space-around;
+        .text-box {
+            width: 78%;
+        }
+        .option {
+            .icon {
+                margin-left: 6px;
+                font-size: 27px;
+                cursor: pointer;
+            }
+        }
+    }
+    .container {
+        display: flex;
+        .message-box {
+            color: rgb(220, 221, 222);
+            margin: 20px;
+            position: absolute;
+            bottom: 105px;
+            max-height: 82%;
+            width: 75%;
+            overflow: auto;
+            .chat {
+                display: flex;
+                margin-top: 10px;
+                margin-bottom: 25px;
+                .content {
+                    margin-left: 15px;
+                    .user {
+                        display: flex;
+                        .user-name {
+                            font-size: 15px;
+                            margin-right: 15px;
+                        }
+                        .time {
+                            color: rgb(163, 166, 170);
+                            font-size: 13px;
+                        }
+                    }
+                    .message {
+                        font-size: 17px;
+                        word-wrap: break-word;
+                        width: 500px;
+                    }
+                }
+            }
+        }
+    }
+}
+
+::-webkit-scrollbar {
+    width: 8px;
+    background-color: rgb(41, 51, 56);
+    border-radius: 20px;
+}
+::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+    background-color: rgb(32, 34, 37);
+}
+::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+    border-radius: 10px;
+    background-color: rgb(41, 51, 56);
+}
