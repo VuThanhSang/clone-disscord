@@ -17,8 +17,27 @@ import StarBorder from '@mui/icons-material/StarBorder';
 import VolumeUpIcon from '@mui/icons-material/VolumeUp';
 import TagIcon from '@mui/icons-material/Tag';
 import { useState } from 'react';
+import { Box, Modal, Typography } from '@mui/material';
+import SettingLayout from '~/Layout/SettingLayout';
+import Login from '~/pages/Login';
 const cx = classNames.bind(styles);
+
+const style = {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: 400,
+    bgcolor: 'background.paper',
+    border: '2px solid #000',
+    boxShadow: 24,
+    p: 4,
+};
+
 function SubSideBar() {
+    const [open, setOpen] = useState(false);
+    const handleOpen = () => setOpen(true);
+    const handleClose = () => setOpen(false);
     const [openChat, setOpenChat] = useState(true);
 
     const handleClickChat = () => {
@@ -197,7 +216,20 @@ function SubSideBar() {
                 </div>
                 <MicIcon className={cx('icon')}></MicIcon>
                 <HeadphonesIcon className={cx('icon')}></HeadphonesIcon>
-                <SettingsIcon className={cx('icon')}></SettingsIcon>
+
+                <SettingsIcon className={cx('icon')} onClick={handleOpen}>
+                    Open modal
+                </SettingsIcon>
+                <div>
+                    <Modal
+                        open={open}
+                        onClose={handleClose}
+                        aria-labelledby="modal-modal-title"
+                        aria-describedby="modal-modal-description"
+                    >
+                        <SettingLayout callBack={handleClose}>{/* <Login /> */}</SettingLayout>
+                    </Modal>
+                </div>
             </div>
         </div>
     );

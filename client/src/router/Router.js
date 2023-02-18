@@ -1,4 +1,5 @@
 import HeaderOnly from '~/Layout/HeaderOnly';
+import SettingLayout from '~/Layout/SettingLayout';
 import { configRouter } from '~/configs/router';
 import Course from '~/pages/Course';
 import Following from '~/pages/Following';
@@ -9,11 +10,8 @@ import Solution from '~/pages/Solution';
 
 const publicRoutes = [
     { path: configRouter.home, component: Home },
-    { path: configRouter.login, component: Login, layout: HeaderOnly },
+    { path: configRouter.login, component: Login, layout: SettingLayout },
     { path: configRouter.register, component: Following },
-    { path: configRouter.course, component: Login, layout: HeaderOnly },
-    { path: configRouter.solution, component: Login, layout: HeaderOnly },
-    { path: configRouter.profile, component: Login, layout: HeaderOnly },
 ];
 const privateRoutes = [
     { path: configRouter.home, component: Home },
