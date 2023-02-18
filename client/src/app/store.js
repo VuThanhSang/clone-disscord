@@ -1,15 +1,18 @@
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { persistStore, persistReducer, FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
-import authReducer from './authSlice';
+import authReducer from '~/features/auth/authSlice';
 const persistConfig = {
     key: 'root',
-    // version: 1,
+    version: 1,
     storage,
+    blacklist: ['comment'],
 };
+
 export default configureStore({
     reducer: { auth: authReducer },
 });
+// auth: authReducer
 const rootReducer = combineReducers({ auth: authReducer });
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 export const store = configureStore({

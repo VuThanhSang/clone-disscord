@@ -1,11 +1,11 @@
 const express = require("express");
 const router = express.Router();
-const UsersRoutes = require("./user.route");
+const authRoutes = require("./auth.route");
 const friendShipRoutes = require("./friendShip.route");
 const ServerRoutes = require("./server.route");
 const channelRoutes = require("./channel.route");
 const messageRoutes = require("./message.route");
-router.use("/users", UsersRoutes);
+router.use("/auth", authRoutes);
 router.use("/friend", friendShipRoutes);
 router.use("/server", ServerRoutes);
 router.use("/channel", channelRoutes);

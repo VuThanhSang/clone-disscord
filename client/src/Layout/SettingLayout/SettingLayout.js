@@ -12,7 +12,6 @@ function SettingLayout({ children, callBack }) {
                 <Sidebar />
                 <div className={cx('btn-close')}>
                     <HighlightOffIcon onClick={callBack} className={cx('icon')}></HighlightOffIcon>
-                    <p>close</p>
                 </div>
 
                 <div className={cx('content')}>{children}</div>

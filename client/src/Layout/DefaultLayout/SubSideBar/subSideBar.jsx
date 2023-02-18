@@ -20,6 +20,7 @@ import { useState } from 'react';
 import { Box, Modal, Typography } from '@mui/material';
 import SettingLayout from '~/Layout/SettingLayout';
 import Login from '~/pages/Login';
+import Profile from '~/pages/Profile';
 const cx = classNames.bind(styles);
 
 const style = {
@@ -227,7 +228,9 @@ function SubSideBar() {
                         aria-labelledby="modal-modal-title"
                         aria-describedby="modal-modal-description"
                     >
-                        <SettingLayout callBack={handleClose}>{/* <Login /> */}</SettingLayout>
+                        <SettingLayout callBack={handleClose}>
+                            <Profile />
+                        </SettingLayout>
                     </Modal>
                 </div>
             </div>
