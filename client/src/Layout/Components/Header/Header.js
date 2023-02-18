@@ -13,11 +13,7 @@ function Header() {
             setSearchResult([1, 2]);
         }, 3000);
     }, []);
-    return (
-        <header className={cx('wrapper')}>
-            <div className={cx('inner')}></div>
-        </header>
-    );
+    return <></>;
 }
 
 export default Header;
