@@ -14,7 +14,6 @@ export const signInPassWord = createAsyncThunk('auth/signInPassWord', async (par
 export const signInGoogle = createAsyncThunk('auth/signInGoogle', async (params, thunkAPI) => {});
 export const signInFacebook = createAsyncThunk('auth/signInFacebook', async (params, thunkAPI) => {});
 export const logout = createAsyncThunk('auth/logout', async (params, thunkAPI) => {});
-
 export const authSlice = createSlice({
     name: 'auth',
     initialState: {
@@ -26,6 +25,13 @@ export const authSlice = createSlice({
     reducers: {
         refetchToken: (state, action) => {
             state.currentUser = action.payload;
+        },
+        clearUser: (state, action) => {
+            console.log('a');
+            state.currentUser = null;
+            state.loading = false;
+            state.error = '';
+            state.typeLogin = '';
         },
     },
     extraReducers: (builder) => {
@@ -86,11 +92,11 @@ export const authSlice = createSlice({
         });
         builder.addCase(logout.fulfilled, (state, action) => {
             state.loading = false;
-            state.currentUser = action.payload;
+            state.currentUser = null;
             state.typeLogin = '';
         });
     },
 });
-export const { refetchToken } = authSlice.actions;
+export const { refetchToken, clearUser } = authSlice.actions;
 
 export default authSlice.reducer;

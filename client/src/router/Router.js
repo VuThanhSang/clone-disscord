@@ -14,7 +14,7 @@ const publicRoutes = [
 ];
 const privateRoutes = [
     { path: configRouter.home, component: Home },
-    { path: configRouter.login, component: Login },
+    { path: configRouter.login, component: Login, layout: null },
     { path: configRouter.register, component: Following },
     { path: configRouter.course, component: Course },
     { path: configRouter.solution, component: Solution },
