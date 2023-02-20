@@ -17,6 +17,7 @@ function Login() {
     const [password, setPassword] = useState('');
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const { currentUser, loading, error, typeLogin } = useSelector((state) => state.auth);
     const handleClickButtonSignIn = async () => {
         const dataUser = {
             password: password,
@@ -26,12 +27,16 @@ function Login() {
         try {
             const actionResult = await dispatch(signInPassWord({ data: dataUser }));
             const currentUser = unwrapResult(actionResult);
-            navigate(configRouter.home);
-            console.log(currentUser);
         } catch (error) {
             console.log('failed', error.message);
         }
     };
+    useEffect(() => {
+        if (currentUser) {
+            navigate('/');
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [currentUser]);
     return (
         <div className={cx('wrapper')}>
             <div className={cx('wrap-form-login')}>

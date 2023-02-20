@@ -1,8 +1,6 @@
-const UserModel = require("../models/user.model");
-
 const bcryptjs = require("bcryptjs");
 const JWT = require("jsonwebtoken");
-
+const UserModel = require("../models/user.model");
 const encodedAccessToken = (userId) => {
   return JWT.sign(
     {
@@ -44,22 +42,24 @@ const register = async (data) => {
 const login = async (email, password) => {
   try {
     const result = await UserModel.login(email);
-    const isCorrectPassword = await isValidPassword(password, result.password);
-    if (!isCorrectPassword) return { message: "incorrect password" };
-    return result;
-  } catch (error) {}
-};
-const isValidPassword = async (signInPassword, password) => {
-  try {
-    return await bcryptjs.compare(signInPassword, password);
+    if (result) {
+      const isCorrectPassword = await isValidPassword(
+        password,
+        result.password
+      );
+      if (!isCorrectPassword)
+        return { status: false, msg: "incorrect password" };
+      return { data: result, status: true };
+    } else {
+      return { status: false, msg: "Email chưa được đăng ký" };
+    }
   } catch (error) {
     throw new Error(error);
   }
 };
-const getAllUser = async () => {
+const isValidPassword = async (signInPassword, password) => {
   try {
-    const result = await UserModel.getAllUser();
-    return result;
+    return await bcryptjs.compare(signInPassword, password);
   } catch (error) {
     throw new Error(error);
   }
@@ -70,6 +70,5 @@ module.exports = {
   isValidPassword,
   encodedAccessToken,
   login,
-  getAllUser,
   encodedRefreshToken,
 };
