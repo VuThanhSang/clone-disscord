@@ -5,7 +5,7 @@ const { ObjectId } = require("mongodb");
 const channelCollectionName = "Channel";
 
 const channelCollectionSchema = Joi.object({
-  Name: Joi.string().required(),
+  name: Joi.string().required(),
   serverId: Joi.string().required(),
   type: Joi.string().required(),
   inChat: Joi.array().items(Joi.string()).default([]),
@@ -20,7 +20,7 @@ const validateSchema = async (data) => {
 const findOneById = async (id) => {
   try {
     const result = await getDB()
-      .collection(userCollectionName)
+      .collection(channelCollectionName)
       .findOne({ _id: ObjectId(id) });
     return result;
   } catch (error) {
@@ -34,6 +34,12 @@ const create = async (data) => {
     const result = await getDB()
       .collection(channelCollectionName)
       .insertOne(validatedValue);
+    await getDB()
+      .collection("Server")
+      .findOneAndUpdate(
+        { _id: ObjectId(data.serverId) },
+        { $push: { channelOrder: result.insertedId.toString() } }
+      );
     //find and return added data
     const GetNewServer = await findOneById(result.insertedId.toString());
     return GetNewServer;

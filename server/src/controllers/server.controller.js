@@ -3,7 +3,7 @@ const serverService = require("../services/server.service");
 
 const create = async (req, res) => {
   try {
-    const result = await serverService.create(req.body);
+    const result = await serverService.create(req.user.sub, req.body);
     res.status(HttpStatusCode.OK).json({ result: result });
   } catch (error) {
     res.status(HttpStatusCode.INTERNAL_SERVER).json({

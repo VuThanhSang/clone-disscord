@@ -11,14 +11,19 @@ import { clearUser } from '~/features/auth/authSlice';
 const cx = classNames.bind(styles);
 
 function Home() {
+    console.log(useSelector((state) => state.auth));
     const { currentUser, loading } = useSelector((state) => state.auth);
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const checkLogin = async () => {
+        const actionResult = await dispatch(getUserInfo());
+        return actionResult;
+    };
     useEffect(() => {
         if (currentUser === null || !currentUser) {
             navigate('/login');
         }
-    }, []);
+    }, [currentUser]);
     return (
         <div className={cx('wrapper')}>
             <Header />

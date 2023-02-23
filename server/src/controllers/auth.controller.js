@@ -132,30 +132,37 @@ const logout = (req, res, next) => {
   }
 };
 const refresh = async (req, res) => {
-  const refreshToken = req.cookies.refreshToken;
-  if (!refreshToken) return res.status(401).json("You're not authenticated");
-  if (!refreshTokenList.includes(refreshToken)) {
-    return res.status(403).json("RefreshToken is not valid");
-  }
-  Jwt.verify(refreshToken, process.env.JWT_REFRESH, (err, user) => {
-    console.log(user);
-    if (err) {
-      console.log(err);
+  try {
+    const refreshToken = req.cookies.refreshToken;
+    if (!refreshToken) return res.status(401).json("You're not authenticated");
+    if (!refreshTokenList.includes(refreshToken)) {
+      return res.status(403).json("RefreshToken is not valid");
     }
-    refreshTokenList = refreshTokenList.filter(
-      (token) => token !== refreshToken
-    );
-    const newAccessToken = UserService.encodedAccessToken(user.sub);
-    const newRefreshToken = UserService.encodedRefreshToken(user.sub);
-    refreshTokenList.push(newRefreshToken);
-    res.cookie("refreshToken", newRefreshToken, {
-      httpOnly: true,
-      secure: false,
-      path: "/",
-      sameSite: "strict",
+    Jwt.verify(refreshToken, process.env.JWT_REFRESH, (err, user) => {
+      console.log(user);
+      if (err) {
+        console.log(err);
+      }
+      refreshTokenList = refreshTokenList.filter(
+        (token) => token !== refreshToken
+      );
+      const newAccessToken = UserService.encodedAccessToken(user.sub);
+      const newRefreshToken = UserService.encodedRefreshToken(user.sub);
+      refreshTokenList.push(newRefreshToken);
+      res.cookie("refreshToken", newRefreshToken, {
+        httpOnly: true,
+        secure: false,
+        path: "/",
+        sameSite: "strict",
+      });
+      res.status(200).json({ accessToken: newAccessToken, status: true });
     });
-    res.status(200).json({ accessToken: newAccessToken, status: true });
-  });
+  } catch (error) {
+    res.status(400).json({
+      error: new Error(error).message,
+      msg: "refresh token expired",
+    });
+  }
 };
 
 module.exports = {
