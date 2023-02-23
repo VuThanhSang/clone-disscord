@@ -2,13 +2,12 @@ const Joi = require("joi");
 const { getDB } = require("../config/mongodb");
 const { ObjectId } = require("mongodb");
 const bcryptjs = require("bcryptjs");
-const { cloneDeep } = require("lodash");
+const { cloneDeep, get } = require("lodash");
+const serverModel = require("./server.model");
 const userCollectionName = "Users";
 
 const userCollectionSchema = Joi.object({
-  firstName: Joi.string().max(50).default(null),
-  middleName: Joi.string().default(null),
-  lastName: Joi.string().max(50).default(null),
+  username: Joi.string().max(50).default(null),
   password: Joi.string().min(5).max(30).trim().default(null),
   createdAt: Joi.date().timestamp().default(Date.now()),
   updatedAt: Joi.date().timestamp().default(null),
@@ -98,10 +97,48 @@ const getAllUser = async () => {
   return result;
 };
 
+const listServerOfUser = async (userId) => {
+  try {
+    const servers = await getDB()
+      .collection("Server")
+      .aggregate([
+        {
+          $match: { $or: [{ member: { $in: [userId] } }, { ownerId: userId }] },
+        },
+        { $unwind: "$channelOrder" },
+        { $addFields: { channel: { $toObjectId: "$channelOrder" } } },
+        {
+          $lookup: {
+            from: "Channel",
+            localField: "channel",
+            foreignField: "_id",
+            as: "Channels",
+          },
+        },
+        {
+          $group: {
+            _id: "$_id",
+            name: { $first: "$name" },
+            image: { $first: "$image" },
+            ownerId: { $first: "$ownerId" },
+            member: { $first: "$member" },
+            channel: { $push: "$Channels" },
+          },
+        },
+      ])
+      .toArray();
+
+    return servers;
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+
 module.exports = {
   signUp,
   findOneById,
   validateSchema,
   login,
   getAllUser,
+  listServerOfUser,
 };

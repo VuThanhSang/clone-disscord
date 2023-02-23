@@ -1,9 +1,9 @@
 const serverModel = require("../models/server.model");
 
-const create = async (data) => {
+const create = async (ownerId, data) => {
   try {
-    data.Member = [data.Owner];
-    const result = await serverModel.create(data);
+    const addValue = { ...data, ownerId: ownerId, member: [ownerId] };
+    const result = await serverModel.create(addValue);
     return result;
   } catch (error) {
     throw new Error(error);

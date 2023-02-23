@@ -62,9 +62,8 @@ const setUpInterceptor = (store) => {
         },
         async function (error) {
             const user = select(store.getState());
-
             const originalRequest = error.config;
-            if (error.response.status === 403 && !originalRequest._retry) {
+            if (error.response?.status === 403 && !originalRequest._retry) {
                 originalRequest._retry = true;
                 const access_token = await refreshAccessToken();
                 // console.log('refetch token', access_token);
@@ -77,9 +76,11 @@ const setUpInterceptor = (store) => {
                 // console.log('call refetch user', refreshUser, user);
                 store.dispatch(refetchToken(refreshUser));
                 return instance(originalRequest);
-            } else if (error.response.status === 400) {
+            } else if (error.response?.status === 400 || !error.response) {
+                console.log('halo');
                 store.dispatch(clearUser());
             }
+
             return Promise.reject(error);
         },
     );

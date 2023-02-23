@@ -27,7 +27,6 @@ export const authSlice = createSlice({
             state.currentUser = action.payload;
         },
         clearUser: (state, action) => {
-            console.log('a');
             state.currentUser = null;
             state.loading = false;
             state.error = '';

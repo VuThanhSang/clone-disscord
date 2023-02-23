@@ -1,17 +1,17 @@
 const Joi = require("joi");
 const { getDB } = require("../config/mongodb");
 const { ObjectId } = require("mongodb");
-
+const channelModel = require("./channel.model");
 const serverCollectionName = "Server";
 
 const serverCollectionSchema = Joi.object({
-  Name: Joi.string().required(),
-  Member: Joi.array().items(Joi.string()).default([]),
-  ChannelOrder: Joi.array().items(Joi.string()).default([]),
-  Owner: Joi.string().required(),
-  Image: Joi.string().default(null),
+  name: Joi.string().required(),
+  member: Joi.array().items(Joi.string()).default([]),
+  channelOrder: Joi.array().items(Joi.string()).default([]),
+  ownerId: Joi.string().required(),
+  image: Joi.string().default(null),
   createdAt: Joi.date().timestamp().default(Date.now()),
-  updatedAt: Joi.date().timestamp().default(null),
+  updatedAt: Joi.date().timestamp().default(Date.now()),
 });
 
 const validateSchema = async (data) => {
@@ -36,6 +36,16 @@ const create = async (data) => {
     const result = await getDB()
       .collection(serverCollectionName)
       .insertOne(validatedValue);
+    await channelModel.create({
+      name: "Chung",
+      serverId: result.insertedId.toString(),
+      type: "chat",
+    });
+    await channelModel.create({
+      name: "Chung",
+      serverId: result.insertedId.toString(),
+      type: "voiceChat",
+    });
     const GetNewServer = await findOneById(result.insertedId.toString());
     return GetNewServer;
   } catch (error) {
@@ -47,8 +57,33 @@ const addMember = async (id, MemberId) => {
   try {
     await getDB()
       .collection(serverCollectionName)
-      .findOneAndUpdate({ _id: ObjectId(id) }, { $push: { Member: MemberId } });
+      .findOneAndUpdate({ _id: ObjectId(id) }, { $push: { member: MemberId } });
     return await findOneById(id);
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+
+const showChannel = async (serverId) => {
+  try {
+    const result = await getDB()
+      .collection(serverCollectionName)
+      .aggregate([
+        { $match: { _id: ObjectId(serverId) } },
+        { $unwind: "$channelOrder" },
+        { $addFields: { channel: { $toObjectId: "$channelOrder" } } },
+        {
+          $lookup: {
+            from: "Channel",
+            localField: "channel",
+            foreignField: "_id",
+            as: "Channels",
+          },
+        },
+      ])
+      .toArray();
+    // console.log(result);
+    return result;
   } catch (error) {
     throw new Error(error);
   }
@@ -57,4 +92,5 @@ const addMember = async (id, MemberId) => {
 module.exports = {
   create,
   addMember,
+  showChannel,
 };
