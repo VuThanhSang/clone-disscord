@@ -9,12 +9,9 @@ const messageCollectionSchema = Joi.object({
   targetType: Joi.string().required(),
   targetId: Joi.string().required(),
   message: Joi.string().required(),
-  source: Joi.array().items(
-    Joi.object({
-      content: Joi.string().default(null),
-      type: Joi.string().default(null),
-    })
-  ),
+  source: Joi.array()
+    .items({ type: Joi.string(), data: Joi.string(), filename: Joi.string() })
+    .default([]),
   reactions: Joi.array().items({
     emoji: Joi.string().default(null),
     amount: Joi.number().default(0),
@@ -22,7 +19,7 @@ const messageCollectionSchema = Joi.object({
   isReply: Joi.boolean().default(false),
   isDestroy: Joi.boolean().default(false),
   createdAt: Joi.date().timestamp().default(Date.now()),
-  updatedAt: Joi.date().timestamp().default(null),
+  updatedAt: Joi.date().timestamp().default(Date.now()),
 });
 
 const validateSchema = async (data) => {
@@ -33,7 +30,7 @@ const validateSchema = async (data) => {
 const findOneById = async (id) => {
   try {
     const result = await getDB()
-      .collection(userCollectionName)
+      .collection(messageCollectionName)
       .findOne({ _id: ObjectId(id) });
     return result;
   } catch (error) {
@@ -46,7 +43,7 @@ const sendMessage = async (data) => {
     const validatedValue = await validateSchema(data);
     const result = await getDB()
       .collection(messageCollectionName)
-      .insert(validatedValue);
+      .insertOne(validatedValue);
     const getNewMessage = await findOneById(result.insertedId.toString());
     return getNewMessage;
   } catch (error) {
@@ -76,6 +73,16 @@ const showDirectMessage = async (sourceId, targetId) => {
     throw new Error(error);
   }
 };
+const deleteMessage = async (id) => {
+  try {
+    await getDB()
+      .collection(messageCollectionName)
+      .deleteOne({ _id: ObjectId(id) });
+    return "deleted successfully";
+  } catch (error) {
+    throw new Error(error);
+  }
+};
 const findInChat = async (findData, sourceId, targetId, type) => {
   try {
     const dataChat = await show;
@@ -97,4 +104,6 @@ module.exports = {
   editMessage,
   showDirectMessage,
   showChannelMessage,
+  findOneById,
+  deleteMessage,
 };

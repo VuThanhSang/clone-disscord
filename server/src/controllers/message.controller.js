@@ -3,7 +3,7 @@ const messageService = require("../services/message.service");
 
 const sendMessage = async (req, res) => {
   try {
-    const result = await messageService.sendMessage(req.body);
+    const result = await messageService.sendMessage(req);
     res.status(HttpStatusCode.OK).json({ result: result });
   } catch (error) {
     res.status(HttpStatusCode.INTERNAL_SERVER).json({
@@ -45,9 +45,45 @@ const showDirectMessage = async (req, res) => {
   }
 };
 
+const removeSource = async (req, res) => {
+  try {
+    const result = await messageService.removeSource(
+      req.params.id,
+      req.user.sub
+    );
+    if (result.status === true) {
+      res.status(HttpStatusCode.OK).json({ result: result });
+    } else {
+      res.status(401).json({ result: result });
+    }
+  } catch (error) {
+    res.status(HttpStatusCode.INTERNAL_SERVER).json({
+      error: new Error(error).message,
+    });
+  }
+};
+const deleteMessage = async (req, res) => {
+  try {
+    const result = await messageService.removeSource(
+      req.params.id,
+      req.user.sub
+    );
+    if (result.status === true) {
+      res.status(HttpStatusCode.OK).json({ result: result });
+    } else {
+      res.status(401).json({ result: result });
+    }
+  } catch (error) {
+    res.status(HttpStatusCode.INTERNAL_SERVER).json({
+      error: new Error(error).message,
+    });
+  }
+};
 module.exports = {
   sendMessage,
   editMessage,
   showDirectMessage,
   showChannelMessage,
+  removeSource,
+  deleteMessage,
 };
