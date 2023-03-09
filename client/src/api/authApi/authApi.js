@@ -13,7 +13,8 @@ export const loginPass = async (params) => {
 };
 export const getUserInfo = async () => {
     try {
-        await httpRequest.get('/auth/login/success');
+        const res = await httpRequest.get('/auth/login/success');
+        return res;
     } catch (error) {
         console.log(error);
     }

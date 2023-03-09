@@ -11,8 +11,11 @@ export const signInPassWord = createAsyncThunk('auth/signInPassWord', async (par
     const res = await authApi.loginPass({ data });
     return res;
 });
-export const signInGoogle = createAsyncThunk('auth/signInGoogle', async (params, thunkAPI) => {});
-export const signInFacebook = createAsyncThunk('auth/signInFacebook', async (params, thunkAPI) => {});
+export const getUserInfo = createAsyncThunk('auth/getUserInfo', async (params, thunkAPI) => {
+    const res = await authApi.getUserInfo();
+    return res;
+});
+
 export const logout = createAsyncThunk('auth/logout', async (params, thunkAPI) => {});
 export const authSlice = createSlice({
     name: 'auth',
@@ -43,7 +46,7 @@ export const authSlice = createSlice({
         });
         builder.addCase(signInPassWord.fulfilled, (state, action) => {
             state.loading = false;
-            state.currentUser = action.payload;
+            state.currentUser = action.payload.result;
             state.typeLogin = 'password';
         });
         builder.addCase(signUpPassWord.pending, (state, action) => {
@@ -55,32 +58,20 @@ export const authSlice = createSlice({
         });
         builder.addCase(signUpPassWord.fulfilled, (state, action) => {
             state.loading = false;
-            state.currentUser = action.payload;
+            state.currentUser = action.payload.result;
             state.typeLogin = 'password';
         });
-        builder.addCase(signInGoogle.pending, (state, action) => {
+        builder.addCase(getUserInfo.pending, (state, action) => {
             state.loading = true;
         });
-        builder.addCase(signInGoogle.rejected, (state, action) => {
+        builder.addCase(getUserInfo.rejected, (state, action) => {
             state.loading = false;
             state.error = action.error;
         });
-        builder.addCase(signInGoogle.fulfilled, (state, action) => {
+        builder.addCase(getUserInfo.fulfilled, (state, action) => {
             state.loading = false;
-            state.currentUser = action.payload;
+            state.currentUser = action.payload.result;
             state.typeLogin = 'google';
-        });
-        builder.addCase(signInFacebook.pending, (state, action) => {
-            state.loading = true;
-        });
-        builder.addCase(signInFacebook.rejected, (state, action) => {
-            state.loading = false;
-            state.error = action.error;
-        });
-        builder.addCase(signInFacebook.fulfilled, (state, action) => {
-            state.loading = false;
-            state.currentUser = action.payload;
-            state.typeLogin = 'facebook';
         });
         builder.addCase(logout.pending, (state, action) => {
             state.loading = true;

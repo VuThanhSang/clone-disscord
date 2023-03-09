@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { clearUser, refetchToken } from '~/features/auth/authSlice';
-
+import { clearServer } from '~/features/server/serverSlice';
 import instance from '~/utils/HttpRequest';
 
 const refreshAccessToken = async () => {
@@ -8,7 +8,7 @@ const refreshAccessToken = async () => {
         const res = await instance.post('auth/refresh', {
             withCredentials: true,
         });
-        console.log('refetch api call', res);
+
         return res.data?.accessToken;
     } catch (error) {
         console.log(error);
@@ -32,26 +32,9 @@ const setUpInterceptor = (store) => {
             return config;
         }
         const user = select(store.getState());
-
         if (user?.data?.accessToken) {
             // console.log('call api');
             config.headers['token'] = user?.data?.accessToken ? `Bearer ${user?.data?.accessToken}` : '';
-
-            // const decodedToken = jwtDecode(user?.data?.accessToken);
-            // if (decodedToken.exp < date.getTime() / 1000) {
-            // const token = await RefreshToken();
-            // console.log('refetch api', token);
-            // config.headers['token'] = token ? `Bearer ${token}` : '';
-            // const refreshUser = {
-            //     data: { ...user?.data, accessToken: token },
-            //     status: 'true',
-            //     message: 'successfully',
-            // };
-            // store.dispatch(refetchToken(refreshUser));
-            // console.log('update token user', refreshUser);
-            // } else {
-            //     // config.headers['token'] = user?.data?.accessToken ? `Bearer ${user?.data?.accessToken}` : '';
-            // }
         }
         return config;
     }, handleError);
@@ -77,8 +60,8 @@ const setUpInterceptor = (store) => {
                 store.dispatch(refetchToken(refreshUser));
                 return instance(originalRequest);
             } else if (error.response?.status === 400 || !error.response) {
-                console.log('halo');
                 store.dispatch(clearUser());
+                store.dispatch(clearServer());
             }
 
             return Promise.reject(error);

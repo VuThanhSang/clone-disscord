@@ -38,7 +38,7 @@ const style = {
 
 function SubSideBar() {
     const { currentUser, loading } = useSelector((state) => state.auth);
-
+    const { currentServer } = useSelector((state) => state.servers);
     const [open, setOpen] = useState(false);
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
@@ -52,6 +52,7 @@ function SubSideBar() {
     const handleClickVoice = () => {
         setOpenVoice(!openVoice);
     };
+    // console.log(currentServer);
     return (
         <div className={cx('wrapper')}>
             <div className={cx('server-name')}>
@@ -76,7 +77,6 @@ function SubSideBar() {
                         ) : (
                             <ExpandMore sx={{ color: 'rgb(150,152,157)', fontSize: 25 }} />
                         )}
-                        {/* <p style={{ marginLeft: 0.5, fontSize: 15 }}>KÊNH CHAT</p> */}
                         <ListItemText
                             sx={{
                                 marginLeft: 0.5,
@@ -91,46 +91,32 @@ function SubSideBar() {
                             primary="KÊNH CHAT"
                         />
                     </ListItemButton>
-                    <Collapse in={openChat} timeout="auto" unmountOnExit>
-                        <List component="div" disablePadding>
-                            <ListItemButton sx={{ pl: 4 }}>
-                                <TagIcon sx={{ color: 'rgb(150,152,157)', fontSize: 25 }} />
-                                <ListItemText
-                                    sx={{
-                                        marginLeft: 0.5,
+                    {currentServer.channel.map((data) => {
+                        if (data[0].type === 'chat') {
+                            return (
+                                <Collapse in={openChat} timeout="auto" unmountOnExit>
+                                    <List component="div" disablePadding>
+                                        <ListItemButton sx={{ pl: 4 }}>
+                                            <TagIcon sx={{ color: 'rgb(150,152,157)', fontSize: 25 }} />
+                                            <ListItemText
+                                                sx={{
+                                                    marginLeft: 0.5,
 
-                                        '&:hover': { color: '#fff' },
-                                    }}
-                                    primaryTypographyProps={{
-                                        fontSize: 13,
-                                        fontWeight: 'medium',
-                                        letterSpacing: 0,
-                                    }}
-                                    primary="Starred"
-                                />
-                            </ListItemButton>
-                        </List>
-                    </Collapse>
-                    <Collapse in={openChat} timeout="auto" unmountOnExit>
-                        <List component="div" disablePadding>
-                            <ListItemButton sx={{ pl: 4 }}>
-                                <TagIcon sx={{ color: 'rgb(150,152,157)', fontSize: 25 }} />
-                                <ListItemText
-                                    sx={{
-                                        marginLeft: 0.5,
-
-                                        '&:hover': { color: '#fff' },
-                                    }}
-                                    primaryTypographyProps={{
-                                        fontSize: 13,
-                                        fontWeight: 'medium',
-                                        letterSpacing: 0,
-                                    }}
-                                    primary="Starred"
-                                />
-                            </ListItemButton>
-                        </List>
-                    </Collapse>
+                                                    '&:hover': { color: '#fff' },
+                                                }}
+                                                primaryTypographyProps={{
+                                                    fontSize: 13,
+                                                    fontWeight: 'medium',
+                                                    letterSpacing: 0,
+                                                }}
+                                                primary={data[0].name}
+                                            />
+                                        </ListItemButton>
+                                    </List>
+                                </Collapse>
+                            );
+                        }
+                    })}
                 </List>
 
                 <List
@@ -148,7 +134,6 @@ function SubSideBar() {
                         ) : (
                             <ExpandMore sx={{ color: 'rgb(150,152,157)', fontSize: 25 }} />
                         )}
-                        {/* <p style={{ marginLeft: 0.5, fontSize: 15 }}>KÊNH CHAT</p> */}
                         <ListItemText
                             sx={{
                                 marginLeft: 0.5,
@@ -163,56 +148,39 @@ function SubSideBar() {
                             primary="KÊNH THOẠI"
                         />
                     </ListItemButton>
-                    <Collapse in={openVoice} timeout="auto" unmountOnExit>
-                        <List component="div" disablePadding>
-                            <ListItemButton sx={{ pl: 4 }}>
-                                <VolumeUpIcon sx={{ color: 'rgb(150,152,157)', fontSize: 25 }} />
-                                <ListItemText
-                                    sx={{
-                                        marginLeft: 0.5,
+                    {currentServer.channel.map((data) => {
+                        if (data[0].type === 'voiceChat') {
+                            return (
+                                <Collapse in={openChat} timeout="auto" unmountOnExit>
+                                    <List component="div" disablePadding>
+                                        <ListItemButton sx={{ pl: 4 }}>
+                                            <TagIcon sx={{ color: 'rgb(150,152,157)', fontSize: 25 }} />
+                                            <ListItemText
+                                                sx={{
+                                                    marginLeft: 0.5,
 
-                                        '&:hover': { color: '#fff' },
-                                    }}
-                                    primaryTypographyProps={{
-                                        fontSize: 13,
-                                        fontWeight: 'medium',
-                                        letterSpacing: 0,
-                                    }}
-                                    primary="Starred"
-                                />
-                            </ListItemButton>
-                        </List>
-                    </Collapse>
-                    <Collapse in={openVoice} timeout="auto" unmountOnExit>
-                        <List component="div" disablePadding>
-                            <ListItemButton sx={{ pl: 4 }}>
-                                <VolumeUpIcon sx={{ color: 'rgb(150,152,157)', fontSize: 25 }} />
-                                <ListItemText
-                                    sx={{
-                                        marginLeft: 0.5,
-
-                                        '&:hover': { color: '#fff' },
-                                    }}
-                                    primaryTypographyProps={{
-                                        fontSize: 13,
-                                        fontWeight: 'medium',
-                                        letterSpacing: 0,
-                                    }}
-                                    primary="Starred"
-                                />
-                            </ListItemButton>
-                        </List>
-                    </Collapse>
+                                                    '&:hover': { color: '#fff' },
+                                                }}
+                                                primaryTypographyProps={{
+                                                    fontSize: 13,
+                                                    fontWeight: 'medium',
+                                                    letterSpacing: 0,
+                                                }}
+                                                primary={data[0].name}
+                                            />
+                                        </ListItemButton>
+                                    </List>
+                                </Collapse>
+                            );
+                        }
+                    })}
                 </List>
             </div>
             <div className={cx('control')}>
                 <div className={cx('info')}>
                     <Avatar className={cx('avatar')} alt="Remy Sharp" src={currentUser?.result?.data.avatar?.data} />
                     <div className={cx('name')}>
-                        <p>
-                            {currentUser?.result?.data.lastName} {currentUser?.result?.data.middleName}{' '}
-                            {currentUser?.result?.data.firstName}
-                        </p>
+                        <p>{currentUser?.data.username}</p>
                         <p>#6969</p>
                     </div>
                 </div>

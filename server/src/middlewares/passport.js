@@ -43,7 +43,7 @@ passport.use(
     {
       clientID: env.GOOGLE_CLIENT_ID,
       clientSecret: env.GOOGLE_CLIENT_SECRET,
-      callbackURL: `http://${process.env.APP_HOST}:3240/v1/users/auth/google/callback`,
+      callbackURL: `http://${process.env.APP_HOST}:3240/v1/auth/google/callback`,
     },
     async (req, accessToken, refreshToken, profile, done) => {
       try {
@@ -56,8 +56,7 @@ passport.use(
         }
         //if new account
         const newUser = await UserModel.signUp({
-          firstName: profile.name.givenName,
-          lastName: profile.name.familyName,
+          username: profile.username,
           authType: "google",
           email: profile.emails[0].value,
           authGoogleId: profile.id,
@@ -74,7 +73,7 @@ passport.use(
     {
       clientID: env.GITHUB_CLIENT_ID,
       clientSecret: env.GITHUB_CLIENT_SECRET,
-      callbackURL: `http://${process.env.APP_HOST}:3240/v1/users/auth/github/callback`,
+      callbackURL: `http://${process.env.APP_HOST}:3240/v1/auth/github/callback`,
       passReqToCallback: true,
       proxy: true,
       scope: ["user:email"], //This is all it takes to get emails
@@ -88,9 +87,10 @@ passport.use(
         if (existUser) {
           return done(null, existUser);
         }
+        console.log(profile);
         //if new account
         const newUser = await UserModel.signUp({
-          firstName: profile.username,
+          username: profile.username,
           authType: "github",
           email: profile.emails[0].value,
           authGithubId: profile.id,

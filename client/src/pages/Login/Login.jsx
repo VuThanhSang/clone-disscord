@@ -9,7 +9,7 @@ import GitHubIcon from '@mui/icons-material/GitHub';
 
 import { unwrapResult } from '@reduxjs/toolkit';
 import { useDispatch, useSelector } from 'react-redux';
-import { signInGithub, signInGoogle, signInPassWord } from '~/features/auth/authSlice';
+import { getUserInfo, signInPassWord } from '~/features/auth/authSlice';
 import { configRouter } from '~/configs/router';
 const cx = classNames.bind(styles);
 function Login() {
@@ -18,6 +18,9 @@ function Login() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const { currentUser, loading, error, typeLogin } = useSelector((state) => state.auth);
+    const loginGoogleHandleClick = async () => {
+        window.open('http://localhost:3240/v1/auth/google', '_self');
+    };
     const handleClickButtonSignIn = async () => {
         const dataUser = {
             password: password,
@@ -25,8 +28,8 @@ function Login() {
             authType: 'local',
         };
         try {
-            const actionResult = await dispatch(signInPassWord({ data: dataUser }));
-            const currentUser = unwrapResult(actionResult);
+            const actionLoginResult = await dispatch(signInPassWord({ data: dataUser }));
+            const currentUser = unwrapResult(actionLoginResult);
         } catch (error) {
             console.log('failed', error.message);
         }
@@ -91,7 +94,7 @@ function Login() {
                             <Button className={cx('face')}>
                                 <GitHubIcon />
                             </Button>
-                            <Button className={cx('goog')}>
+                            <Button onClick={loginGoogleHandleClick} className={cx('goog')}>
                                 <GoogleIcon />
                             </Button>
                         </div>

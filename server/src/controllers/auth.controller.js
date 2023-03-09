@@ -24,7 +24,7 @@ const login = async (req, res, next) => {
       });
       refreshTokenList.push(refreshToken);
       res.setHeader("token", "Bearer " + accessToken);
-      userInfo = other;
+      userInfo = other.data;
       res.status(HttpStatusCode.OK).json({
         result: {
           data: { ...other.data, accessToken: accessToken },
@@ -85,7 +85,10 @@ const signInSuccess = async (req, res) => {
       result: {
         status: true,
         message: "successfully",
-        data: { ...userInfo, accessToken: accessToken },
+        data: {
+          ...userInfo,
+          accessToken: accessToken,
+        },
       },
     });
   } else {
@@ -143,18 +146,20 @@ const refresh = async (req, res) => {
       if (err) {
         console.log(err);
       }
-      refreshTokenList = refreshTokenList.filter(
-        (token) => token !== refreshToken
-      );
+      console.log("truoc khi refresh: " + refreshTokenList);
+      // refreshTokenList = refreshTokenList.filter(
+      //   (token) => token !== refreshToken
+      // );
       const newAccessToken = UserService.encodedAccessToken(user.sub);
-      const newRefreshToken = UserService.encodedRefreshToken(user.sub);
-      refreshTokenList.push(newRefreshToken);
-      res.cookie("refreshToken", newRefreshToken, {
-        httpOnly: true,
-        secure: false,
-        path: "/",
-        sameSite: "strict",
-      });
+      // const newRefreshToken = UserService.encodedRefreshToken(user.sub);
+      // refreshTokenList.push(newRefreshToken);
+      console.log("sau khi refresh: " + refreshTokenList);
+      // res.cookie("refreshToken", newRefreshToken, {
+      //   httpOnly: true,
+      //   secure: false,
+      //   path: "/",
+      //   sameSite: "strict",
+      // });
       res.status(200).json({ accessToken: newAccessToken, status: true });
     });
   } catch (error) {
