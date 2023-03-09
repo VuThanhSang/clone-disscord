@@ -4,26 +4,28 @@ import Header from './Header';
 import ChatArena from './ChatArena/ChatArena';
 import MemberList from './MemberList';
 import { useDispatch, useSelector } from 'react-redux';
-import { getUserInfo } from '~/api/authApi/authApi';
+import { getUserInfo } from '~/features/auth/authSlice';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { clearUser } from '~/features/auth/authSlice';
+import { getListServer } from '~/features/server/serverSlice';
 const cx = classNames.bind(styles);
 
 function Home() {
-    console.log(useSelector((state) => state.auth));
-    const { currentUser, loading } = useSelector((state) => state.auth);
+    let { currentUser, loading } = useSelector((state) => state.auth);
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const checkLogin = async () => {
-        const actionResult = await dispatch(getUserInfo());
+    const getServer = async () => {
+        const data = await dispatch(getUserInfo());
+        // console.log(data);
+        const actionResult = await dispatch(getListServer());
         return actionResult;
     };
     useEffect(() => {
+        getServer();
         if (currentUser === null || !currentUser) {
             navigate('/login');
         }
-    }, [currentUser]);
+    }, []);
     return (
         <div className={cx('wrapper')}>
             <Header />
