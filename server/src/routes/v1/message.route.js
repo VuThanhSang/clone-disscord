@@ -4,10 +4,8 @@ const router = express.Router();
 const messageController = require("../../controllers/message.controller");
 const videoFileUploader = require("../../middlewares/videocloudinary");
 const imageFileUploader = require("../../middlewares/imagecloudinary");
-
-router.route("/sendMessage").post(verifyToken, messageController.sendMessage);
 router
-  .route("/sendImage")
+  .route("/sendMessage")
   .post(
     verifyToken,
     imageFileUploader.array("files"),
