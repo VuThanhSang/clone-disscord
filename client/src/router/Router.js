@@ -8,7 +8,6 @@ import Profile from '~/pages/Profile';
 import Solution from '~/pages/Solution';
 
 const publicRoutes = [
-    { path: configRouter.home, component: Home },
     { path: configRouter.login, component: Login, layout: null },
     { path: configRouter.register, component: Following },
 ];

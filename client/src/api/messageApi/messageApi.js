@@ -8,3 +8,12 @@ export const getChannelMessage = async (channelId) => {
         console.log(error);
     }
 };
+
+export const sendMessage = async (data) => {
+    try {
+        const res = await httpRequest.post('message/sendMessage', { ...data });
+        return res;
+    } catch (error) {
+        console.log(error);
+    }
+};
