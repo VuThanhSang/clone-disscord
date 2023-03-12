@@ -21,6 +21,7 @@ function Login() {
     const loginGoogleHandleClick = async () => {
         window.open('http://localhost:3240/v1/auth/google', '_self');
     };
+    console.log(currentUser);
     const handleClickButtonSignIn = async () => {
         const dataUser = {
             password: password,

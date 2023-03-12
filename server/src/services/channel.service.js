@@ -9,18 +9,18 @@ const create = async (data) => {
   }
 };
 
-const joinChannel = async (data) => {
+const joinChannel = async (channelId, userId) => {
   try {
-    const result = await channelModel.joinChannel(data.id, data.userId);
+    const result = await channelModel.joinChannel(channelId, userId);
     return result;
   } catch (error) {
     throw new Error(error);
   }
 };
 
-const leaveChannel = async (data) => {
+const leaveChannel = async (channelId, userId) => {
   try {
-    const result = await channelModel.leaveChannel(data.id, data.userId);
+    const result = await channelModel.leaveChannel(channelId, userId);
     return result;
   } catch (error) {
     throw new Error(error);

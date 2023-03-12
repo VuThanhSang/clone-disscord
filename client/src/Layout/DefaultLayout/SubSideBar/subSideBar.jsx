@@ -17,11 +17,13 @@ import StarBorder from '@mui/icons-material/StarBorder';
 import VolumeUpIcon from '@mui/icons-material/VolumeUp';
 import TagIcon from '@mui/icons-material/Tag';
 import { useState } from 'react';
-import { Box, Modal, Typography } from '@mui/material';
+import { Box, ListItem, Modal, Typography } from '@mui/material';
 import SettingLayout from '~/Layout/SettingLayout';
 import Login from '~/pages/Login';
 import Profile from '~/pages/Profile';
 import { useSelector } from 'react-redux';
+import AddIcon from '@mui/icons-material/Add';
+import CreateChannel from './CreateChannel';
 const cx = classNames.bind(styles);
 
 const style = {
@@ -39,9 +41,12 @@ const style = {
 function SubSideBar() {
     const { currentUser, loading } = useSelector((state) => state.auth);
     const { currentServer } = useSelector((state) => state.servers);
-    const [open, setOpen] = useState(false);
-    const handleOpen = () => setOpen(true);
-    const handleClose = () => setOpen(false);
+    const [openModalSetting, setOpenModalSetting] = useState(false);
+    const handleOpenModalSetting = () => setOpenModalSetting(true);
+    const handleCloseModalSetting = () => setOpenModalSetting(false);
+    const [openModalAddChannel, setOpenModalAddChannel] = useState(false);
+    const handleOpenModalAddChannel = () => setOpenModalAddChannel(true);
+    const handleCloseModalAddChannel = () => setOpenModalAddChannel(false);
     const [openChat, setOpenChat] = useState(true);
 
     const handleClickChat = () => {
@@ -71,16 +76,15 @@ function SubSideBar() {
                     component="nav"
                     aria-labelledby="nested-list-subheader"
                 >
-                    <ListItemButton onClick={handleClickChat}>
+                    <ListItem>
                         {openChat ? (
-                            <ExpandLess sx={{ color: 'rgb(150,152,157)', fontSize: 25 }} />
+                            <ExpandLess onClick={handleClickChat} sx={{ color: 'rgb(150,152,157)', fontSize: 25 }} />
                         ) : (
-                            <ExpandMore sx={{ color: 'rgb(150,152,157)', fontSize: 25 }} />
+                            <ExpandMore onClick={handleClickChat} sx={{ color: 'rgb(150,152,157)', fontSize: 25 }} />
                         )}
                         <ListItemText
                             sx={{
                                 marginLeft: 0.5,
-
                                 '&:hover': { color: '#fff' },
                             }}
                             primaryTypographyProps={{
@@ -90,8 +94,23 @@ function SubSideBar() {
                             }}
                             primary="KÊNH CHAT"
                         />
-                    </ListItemButton>
-                    {currentServer.channel.map((data) => {
+                        {currentServer?.ownerId === currentUser?.data._id && (
+                            <div>
+                                <AddIcon sx={{ cursor: 'pointer' }} onClick={handleOpenModalAddChannel} />
+                                <Modal
+                                    open={openModalAddChannel}
+                                    onClose={handleCloseModalAddChannel}
+                                    aria-labelledby="modal-modal-title"
+                                    aria-describedby="modal-modal-description"
+                                >
+                                    <CreateChannel callback={handleCloseModalAddChannel} />
+                                    {/* <SettingLayout callBack={handleCloseModalAddChannel}>
+                                    </SettingLayout> */}
+                                </Modal>
+                            </div>
+                        )}
+                    </ListItem>
+                    {currentServer?.channel.map((data) => {
                         if (data[0].type === 'chat') {
                             return (
                                 <Collapse in={openChat} timeout="auto" unmountOnExit>
@@ -130,9 +149,9 @@ function SubSideBar() {
                 >
                     <ListItemButton onClick={handleClickVoice}>
                         {openVoice ? (
-                            <ExpandLess sx={{ color: 'rgb(150,152,157)', fontSize: 25 }} />
+                            <ExpandLess onClick={handleClickChat} sx={{ color: 'rgb(150,152,157)', fontSize: 25 }} />
                         ) : (
-                            <ExpandMore sx={{ color: 'rgb(150,152,157)', fontSize: 25 }} />
+                            <ExpandMore onClick={handleClickChat} sx={{ color: 'rgb(150,152,157)', fontSize: 25 }} />
                         )}
                         <ListItemText
                             sx={{
@@ -148,13 +167,13 @@ function SubSideBar() {
                             primary="KÊNH THOẠI"
                         />
                     </ListItemButton>
-                    {currentServer.channel.map((data) => {
+                    {currentServer?.channel.map((data) => {
                         if (data[0].type === 'voiceChat') {
                             return (
-                                <Collapse in={openChat} timeout="auto" unmountOnExit>
+                                <Collapse in={openVoice} timeout="auto" unmountOnExit>
                                     <List component="div" disablePadding>
                                         <ListItemButton sx={{ pl: 4 }}>
-                                            <TagIcon sx={{ color: 'rgb(150,152,157)', fontSize: 25 }} />
+                                            <VolumeUpIcon sx={{ color: 'rgb(150,152,157)', fontSize: 25 }} />
                                             <ListItemText
                                                 sx={{
                                                     marginLeft: 0.5,
@@ -178,7 +197,7 @@ function SubSideBar() {
             </div>
             <div className={cx('control')}>
                 <div className={cx('info')}>
-                    <Avatar className={cx('avatar')} alt="Remy Sharp" src={currentUser?.result?.data.avatar?.data} />
+                    <Avatar className={cx('avatar')} alt="Remy Sharp" src={currentUser?.data.avatar?.data} />
                     <div className={cx('name')}>
                         <p>{currentUser?.data.username}</p>
                         <p>#6969</p>
@@ -187,17 +206,17 @@ function SubSideBar() {
                 <MicIcon className={cx('icon')}></MicIcon>
                 <HeadphonesIcon className={cx('icon')}></HeadphonesIcon>
 
-                <SettingsIcon className={cx('icon')} onClick={handleOpen}>
+                <SettingsIcon className={cx('icon')} onClick={handleOpenModalSetting}>
                     Open modal
                 </SettingsIcon>
                 <div>
                     <Modal
-                        open={open}
-                        onClose={handleClose}
+                        open={openModalSetting}
+                        onClose={handleCloseModalSetting}
                         aria-labelledby="modal-modal-title"
                         aria-describedby="modal-modal-description"
                     >
-                        <SettingLayout callBack={handleClose}>
+                        <SettingLayout callBack={handleCloseModalSetting}>
                             <Profile />
                         </SettingLayout>
                     </Modal>

@@ -3,7 +3,7 @@ require("dotenv");
 const cloudinary = require("cloudinary").v2;
 const sendMessage = async (req) => {
   try {
-    const source = req.files.map((data) => {
+    const source = req.files?.map((data) => {
       return {
         data: data.path,
         type: data.mimetype,

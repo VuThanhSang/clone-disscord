@@ -88,11 +88,22 @@ const findInChat = async (findData, sourceId, targetId, type) => {
     const dataChat = await show;
   } catch (error) {}
 };
-const showChannelMessage = async (channelId) => {
+const showChannelMessage = async (channelId, paging = 1) => {
   try {
     const result = await getDB()
       .collection(messageCollectionName)
-      .find({ targetId: channelId, targetType: "channel" })
+      .aggregate([
+        { $match: { targetId: channelId } },
+        { $addFields: { _sourceId: { $toObjectId: "$sourceId" } } },
+        {
+          $lookup: {
+            from: "Users",
+            localField: "_sourceId",
+            foreignField: "_id",
+            as: "User",
+          },
+        },
+      ])
       .toArray();
     return result;
   } catch (error) {

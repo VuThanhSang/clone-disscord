@@ -8,28 +8,25 @@ import { getUserInfo } from '~/features/auth/authSlice';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getListServer } from '~/features/server/serverSlice';
+import { refreshAccessToken } from '~/utils/interceptor';
 const cx = classNames.bind(styles);
 
 function Home() {
     let { currentUser, loading } = useSelector((state) => state.auth);
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const getServer = async () => {
-        const data = await dispatch(getUserInfo());
-        // console.log(data);
-        const actionResult = await dispatch(getListServer());
-        return actionResult;
-    };
+
     useEffect(() => {
-        getServer();
-        if (currentUser === null || !currentUser) {
-            navigate('/login');
-        }
+        dispatch(getListServer());
     }, []);
     return (
-        <div className={cx('wrapper')}>
-            <Header />
-            <ChatArena />
+        <div>
+            {currentUser && (
+                <div className={cx('wrapper')}>
+                    <Header />
+                    <ChatArena />
+                </div>
+            )}
         </div>
     );
 }

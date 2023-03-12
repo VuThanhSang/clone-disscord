@@ -1,5 +1,8 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { useDispatch } from 'react-redux';
 import * as authApi from '~/api/authApi/authApi';
+import { clearServer } from '~/features/server/serverSlice';
+import { clearMessage } from '~/features/message/messageSlice';
 
 export const signUpPassWord = createAsyncThunk('auth/signUpPassWord', async (params, thunkAPI) => {
     const data = params.data;
@@ -70,7 +73,7 @@ export const authSlice = createSlice({
         });
         builder.addCase(getUserInfo.fulfilled, (state, action) => {
             state.loading = false;
-            state.currentUser = action.payload.result;
+            state.currentUser = action.payload?.result;
             state.typeLogin = 'google';
         });
         builder.addCase(logout.pending, (state, action) => {

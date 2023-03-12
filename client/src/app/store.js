@@ -8,7 +8,7 @@ const persistConfig = {
     key: 'root',
     version: 1,
     storage,
-    blacklist: ['server', 'message'],
+    blacklist: ['servers', 'message'],
 };
 
 export default configureStore({

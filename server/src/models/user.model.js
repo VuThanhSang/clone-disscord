@@ -133,6 +133,17 @@ const listServerOfUser = async (userId) => {
     throw new Error(error);
   }
 };
+const update = async (id, data) => {
+  try {
+    const updateData = { ...data, updatedAt: Date.now() };
+    await getDB()
+      .collection(userCollectionName)
+      .findOneAndUpdate({ _id: ObjectId(id) }, { $set: updateData });
+    return await findOneById(id);
+  } catch (error) {
+    throw new Error(error);
+  }
+};
 
 module.exports = {
   signUp,
@@ -141,4 +152,5 @@ module.exports = {
   login,
   getAllUser,
   listServerOfUser,
+  update,
 };

@@ -4,6 +4,7 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { clearUser, logout } from '~/features/auth/authSlice';
+
 const cx = classNames.bind(styles);
 function Sidebar() {
     const dispatch = useDispatch();
@@ -11,6 +12,7 @@ function Sidebar() {
     const handleLogout = async () => {
         try {
             const actionResult = await dispatch(logout());
+
             navigate('/login');
         } catch (error) {
             console.log(error);

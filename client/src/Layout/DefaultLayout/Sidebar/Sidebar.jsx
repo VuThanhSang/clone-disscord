@@ -1,11 +1,15 @@
 import { Avatar, Tooltip } from '@mui/material';
 import classNames from 'classnames/bind';
-import { useSelector } from 'react-redux';
+import { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { getListServer } from '~/features/server/serverSlice';
 import styles from './Sidebar.module.scss';
 
 const cx = classNames.bind(styles);
 function Sidebar() {
     const { server, loading } = useSelector((state) => state.servers);
+    const dispatch = useDispatch();
+
     return (
         <div className={cx('wrapper')}>
             <div className={cx('box')}>
@@ -16,7 +20,7 @@ function Sidebar() {
                 />
             </div>
             <div className={cx('slash')}></div>
-            {server.map((data) => {
+            {server?.map((data) => {
                 return (
                     <div className={cx('box')}>
                         <Tooltip title={data.name} placement="right">
