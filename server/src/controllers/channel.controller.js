@@ -14,7 +14,10 @@ const create = async (req, res) => {
 
 const joinChannel = async (req, res) => {
   try {
-    const result = await channelService.joinChannel(req.body);
+    const result = await channelService.joinChannel(
+      req.params.id,
+      req.user.sub
+    );
     res.status(HttpStatusCode.OK).json({ result: result });
   } catch (error) {
     res.status(HttpStatusCode.INTERNAL_SERVER).json({
@@ -25,7 +28,10 @@ const joinChannel = async (req, res) => {
 
 const leaveChannel = async (req, res) => {
   try {
-    const result = await channelService.leaveChannel(req.body);
+    const result = await channelService.leaveChannel(
+      req.params.id,
+      req.user.sub
+    );
     res.status(HttpStatusCode.OK).json({ result: result });
   } catch (error) {
     res.status(HttpStatusCode.INTERNAL_SERVER).json({

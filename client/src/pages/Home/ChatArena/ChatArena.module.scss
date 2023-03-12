@@ -1,40 +1,23 @@
 .chat-arena {
-    height: 100vh;
     position: relative;
-    .chat-bar {
-        position: absolute;
-        top: 83%;
-        border-radius: 10px;
-        margin-left: 10px;
-        background-color: rgb(64, 68, 75);
-        color: rgb(220, 221, 222);
-        display: flex;
-        // justify-content: space-around;
-        .text-box {
-            width: 78%;
-        }
-        .option {
-            .icon {
-                margin-left: 6px;
-                font-size: 27px;
-                cursor: pointer;
-            }
-        }
-    }
-    .container {
-        display: flex;
+    height: calc(100% - 50px);
+    width: 100%;
+    overflow: hidden;
+    display: flex;
+    .message-container {
+        position: relative;
+        height: 100%;
+        width: 75%;
         .message-box {
+            position: relative;
+            height: 90%;
+            width: 100%;
             color: rgb(220, 221, 222);
-            margin: 20px;
-            position: absolute;
-            bottom: 105px;
-            max-height: 82%;
-            width: 75%;
             overflow: auto;
+            // chat item
             .chat {
+                padding: 10px 20px;
                 display: flex;
-                margin-top: 10px;
-                margin-bottom: 25px;
                 .content {
                     margin-left: 15px;
                     .user {
@@ -53,6 +36,36 @@
                         word-wrap: break-word;
                         width: 500px;
                     }
+                }
+            }
+        }
+        .search-container {
+            position: relative;
+            width: 100%;
+            height: 10%;
+
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+        }
+        .chat-bar {
+            width: 100%;
+            height: 70%;
+            border-radius: 10px;
+            background-color: rgb(64, 68, 75);
+            color: rgb(220, 221, 222);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            .text-box {
+                position: relative;
+                display: flex;
+                width: 70%;
+            }
+            .option {
+                .icon {
+                    font-size: 27px;
+                    cursor: pointer;
                 }
             }
         }

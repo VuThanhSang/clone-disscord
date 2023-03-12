@@ -38,11 +38,38 @@ const bootServer = () => {
       credentials: true,
     })
   );
-  // use api
+
   app.use("/v1", ApiV1);
-  app.listen(env.APP_PORT, () =>
+  const server = app.listen(env.APP_PORT, () =>
     console.log(
       `Example app listening on port http://${env.APP_HOST}:${env.APP_PORT}`
     )
   );
+  const io = require("socket.io")(server, {
+    pingTimeout: 60000,
+    cors: {
+      origin: "http://localhost:3001",
+    },
+  });
+  io.on("connection", (socket) => {
+    console.log("connected to socket.io");
+
+    socket.on("setup", (userData) => {
+      socket.join(userData._id);
+      socket.emit("connected");
+    });
+    socket.on("joinChat", (room) => {
+      socket.join(room);
+      console.log("User join room :" + room);
+    });
+    socket.on("newMessage", (newMessageReceived) => {
+      var inChat = newMessageReceived.inChat;
+      if (!inChat) return console.log("chat.user not define");
+      inChat.forEach((user) => {
+        if (user == newMessageReceived.senderId) return;
+        socket.in(user).emit("message Received", newMessageReceived);
+      });
+      console.log("newMessageReceived", newMessageReceived);
+    });
+  });
 };

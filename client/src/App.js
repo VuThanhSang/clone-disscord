@@ -1,15 +1,14 @@
 import { Fragment } from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { publicRoutes, privateRoutes } from '~/router/Router';
 import DefaultLayout from '~/Layout/DefaultLayout';
 import { useSelector, useStore } from 'react-redux';
 import setUpInterceptor from './utils/interceptor';
 function App() {
-    const currentUser = useSelector((state) => state.auth.currentUser);
     const store = useStore();
     setUpInterceptor(store);
-
-    // check user
+    const currentUser = useSelector((state) => state.auth.currentUser);
+    console.log(currentUser);
     let routerCheck = publicRoutes;
 
     if (currentUser) {
@@ -19,7 +18,6 @@ function App() {
         <Router>
             <div className="App">
                 <Routes>
-                    {/* <Route path="/" element={<Home />} /> */}
                     {routerCheck.map((route, index) => {
                         const Page = route.component;
                         let Layout = DefaultLayout;
@@ -42,6 +40,7 @@ function App() {
                             />
                         );
                     })}
+                    <Route path="*" element={<Navigate to="/login" />} />
                 </Routes>
             </div>
         </Router>

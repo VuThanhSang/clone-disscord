@@ -146,14 +146,14 @@ const refresh = async (req, res) => {
       if (err) {
         console.log(err);
       }
-      console.log("truoc khi refresh: " + refreshTokenList);
+      // console.log("truoc khi refresh: " + refreshTokenList);
       // refreshTokenList = refreshTokenList.filter(
       //   (token) => token !== refreshToken
       // );
       const newAccessToken = UserService.encodedAccessToken(user.sub);
       // const newRefreshToken = UserService.encodedRefreshToken(user.sub);
       // refreshTokenList.push(newRefreshToken);
-      console.log("sau khi refresh: " + refreshTokenList);
+      // console.log("sau khi refresh: " + refreshTokenList);
       // res.cookie("refreshToken", newRefreshToken, {
       //   httpOnly: true,
       //   secure: false,

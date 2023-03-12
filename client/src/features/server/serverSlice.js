@@ -5,7 +5,14 @@ export const getListServer = createAsyncThunk('user/listServer', async (params, 
     const res = await serverApi.getListServer();
     return res;
 });
-
+export const joinChannel = createAsyncThunk('user/joinChannel', async (params, thunkAPI) => {
+    const res = await serverApi.joinChannel(params);
+    return res;
+});
+export const leaveChannel = createAsyncThunk('user/leaveChannel', async (params, thunkAPI) => {
+    const res = await serverApi.joinChannel(params);
+    return res;
+});
 export const serverSlice = createSlice({
     name: 'servers',
     initialState: {
@@ -35,9 +42,33 @@ export const serverSlice = createSlice({
         builder.addCase(getListServer.fulfilled, (state, action) => {
             state.loading = false;
             state.error = '';
-            state.server = action.payload.result;
-            state.currentServer = action.payload.result[0];
-            state.currentChannel = state.currentServer.channel[0][0];
+            state.server = action.payload?.result;
+            state.currentServer = action.payload?.result[0];
+            state.currentChannel = state.currentServer?.channel[0][0];
+        });
+        builder.addCase(joinChannel.pending, (state, action) => {
+            state.loading = true;
+        });
+        builder.addCase(joinChannel.rejected, (state, action) => {
+            state.loading = false;
+            state.error = action.error;
+        });
+        builder.addCase(joinChannel.fulfilled, (state, action) => {
+            state.loading = false;
+            state.error = '';
+            // state.currentChannel = state.currentServer?.channel[0][0];
+        });
+        builder.addCase(leaveChannel.pending, (state, action) => {
+            state.loading = true;
+        });
+        builder.addCase(leaveChannel.rejected, (state, action) => {
+            state.loading = false;
+            state.error = action.error;
+        });
+        builder.addCase(leaveChannel.fulfilled, (state, action) => {
+            state.loading = false;
+            state.error = '';
+            state.currentChannel = state.currentServer?.channel[0][0];
         });
     },
 });
