@@ -9,6 +9,15 @@ export const getListServer = async () => {
     }
 };
 
+export const createChannel = async (data) => {
+    try {
+        const res = await httpRequest.post('channel/create', { ...data });
+        return res;
+    } catch (error) {
+        console.log(error);
+    }
+};
+
 export const joinChannel = async (channelId) => {
     try {
         const res = await httpRequest.post(`channel/join/${channelId}`);

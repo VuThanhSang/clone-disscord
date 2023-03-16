@@ -1,4 +1,6 @@
 .header {
+    padding-left: 20px;
+    padding-top: 20px;
     display: flex;
     justify-content: space-between;
     margin-bottom: 15px;
@@ -10,6 +12,8 @@
     }
 }
 .chooseType {
+    padding-left: 20px;
+
     p {
         font-size: 11px;
         color: rgb(184, 185, 191);
@@ -32,4 +36,13 @@
         .type-info {
         }
     }
+}
+.submit {
+    margin-top: 70px;
+    background-color: rgb(43, 45, 49);
+    height: 80px;
+    width: 463px;
+    border-radius: 5px;
+    text-align: end;
+    padding: 20px 0;
 }

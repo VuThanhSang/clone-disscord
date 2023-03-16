@@ -111,7 +111,7 @@ function SubSideBar() {
                         )}
                     </ListItem>
                     {currentServer?.channel.map((data) => {
-                        if (data[0].type === 'chat') {
+                        if (data[0]?.type === 'chat') {
                             return (
                                 <Collapse in={openChat} timeout="auto" unmountOnExit>
                                     <List component="div" disablePadding>
@@ -168,7 +168,7 @@ function SubSideBar() {
                         />
                     </ListItemButton>
                     {currentServer?.channel.map((data) => {
-                        if (data[0].type === 'voiceChat') {
+                        if (data[0]?.type === 'voiceChat') {
                             return (
                                 <Collapse in={openVoice} timeout="auto" unmountOnExit>
                                     <List component="div" disablePadding>
