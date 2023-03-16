@@ -50,6 +50,9 @@ const create = async (data) => {
 
 const joinChannel = async (id, userId) => {
   try {
+    const leave = await getDB()
+      .collection(channelCollectionName)
+      .updateMany({ inChat: { $in: [userId] } }, { $pull: { inChat: userId } });
     const result = await getDB()
       .collection(channelCollectionName)
       .findOneAndUpdate({ _id: ObjectId(id) }, { $push: { inChat: userId } });
@@ -62,7 +65,7 @@ const leaveChannel = async (id, userId) => {
   try {
     const result = await getDB()
       .collection(channelCollectionName)
-      .updateOne({ _id: ObjectId(id) }, { $pull: { inChat: userId } });
+      .updateMany({ inChat: { $in: [userId] } }, { $pull: { inChat: userId } });
     return await findOneById(id);
   } catch (error) {}
 };
