@@ -5,6 +5,11 @@ export const getListServer = createAsyncThunk('user/listServer', async (params, 
     const res = await serverApi.getListServer();
     return res;
 });
+export const createChannel = createAsyncThunk('channel/Create', async (params, thunkAPI) => {
+    // console.log(params);
+    const res = await serverApi.createChannel(params);
+    return res;
+});
 export const joinChannel = createAsyncThunk('user/joinChannel', async (params, thunkAPI) => {
     const res = await serverApi.joinChannel(params);
     return res;
@@ -56,7 +61,7 @@ export const serverSlice = createSlice({
         builder.addCase(joinChannel.fulfilled, (state, action) => {
             state.loading = false;
             state.error = '';
-            // state.currentChannel = state.currentServer?.channel[0][0];
+            // state.currentChannel = state.payload?.result;
         });
         builder.addCase(leaveChannel.pending, (state, action) => {
             state.loading = true;
@@ -69,6 +74,17 @@ export const serverSlice = createSlice({
             state.loading = false;
             state.error = '';
             state.currentChannel = state.currentServer?.channel[0][0];
+        });
+        builder.addCase(createChannel.pending, (state, action) => {
+            state.loading = true;
+        });
+        builder.addCase(createChannel.rejected, (state, action) => {
+            state.loading = false;
+            state.error = action.error;
+        });
+        builder.addCase(createChannel.fulfilled, (state, action) => {
+            state.loading = false;
+            state.error = '';
         });
     },
 });

@@ -99,6 +99,7 @@ function ChatArena() {
         });
     }, []);
     useEffect(() => {
+        dispatch(joinChannel(currentChannel?._id));
         getMessage();
         socket.emit('joinChat', currentChannel?._id);
     }, [currentChannel]);

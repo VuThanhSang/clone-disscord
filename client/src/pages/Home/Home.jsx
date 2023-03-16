@@ -13,6 +13,7 @@ const cx = classNames.bind(styles);
 
 function Home() {
     let { currentUser, loading } = useSelector((state) => state.auth);
+    let { currentServer } = useSelector((state) => state.servers);
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
