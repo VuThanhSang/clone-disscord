@@ -16,14 +16,15 @@ import ExpandMore from '@mui/icons-material/ExpandMore';
 import StarBorder from '@mui/icons-material/StarBorder';
 import VolumeUpIcon from '@mui/icons-material/VolumeUp';
 import TagIcon from '@mui/icons-material/Tag';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Box, ListItem, Modal, Typography } from '@mui/material';
 import SettingLayout from '~/Layout/SettingLayout';
 import Login from '~/pages/Login';
 import Profile from '~/pages/Profile';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import AddIcon from '@mui/icons-material/Add';
 import CreateChannel from './CreateChannel';
+import { changeChannel, getListServer } from '~/features/server/serverSlice';
 const cx = classNames.bind(styles);
 
 const style = {
@@ -45,9 +46,12 @@ function SubSideBar() {
     const handleOpenModalSetting = () => setOpenModalSetting(true);
     const handleCloseModalSetting = () => setOpenModalSetting(false);
     const [openModalAddChannel, setOpenModalAddChannel] = useState(false);
-    const handleOpenModalAddChannel = () => setOpenModalAddChannel(true);
+    const handleOpenModalAddChannel = () => {
+        setOpenModalAddChannel(true);
+    };
     const handleCloseModalAddChannel = () => setOpenModalAddChannel(false);
     const [openChat, setOpenChat] = useState(true);
+    const dispatch = useDispatch();
 
     const handleClickChat = () => {
         setOpenChat(!openChat);
@@ -57,6 +61,9 @@ function SubSideBar() {
     const handleClickVoice = () => {
         setOpenVoice(!openVoice);
     };
+    useEffect(() => {
+        dispatch(getListServer());
+    }, [openModalAddChannel]);
     // console.log(currentServer);
     return (
         <div className={cx('wrapper')}>
@@ -113,7 +120,14 @@ function SubSideBar() {
                     {currentServer?.channel.map((data) => {
                         if (data[0]?.type === 'chat') {
                             return (
-                                <Collapse in={openChat} timeout="auto" unmountOnExit>
+                                <Collapse
+                                    in={openChat}
+                                    timeout="auto"
+                                    onClick={() => {
+                                        dispatch(changeChannel(data[0]));
+                                    }}
+                                    unmountOnExit
+                                >
                                     <List component="div" disablePadding>
                                         <ListItemButton sx={{ pl: 4 }}>
                                             <TagIcon sx={{ color: 'rgb(150,152,157)', fontSize: 25 }} />
@@ -147,11 +161,11 @@ function SubSideBar() {
                     component="nav"
                     aria-labelledby="nested-list-subheader"
                 >
-                    <ListItemButton onClick={handleClickVoice}>
+                    <ListItemButton>
                         {openVoice ? (
-                            <ExpandLess onClick={handleClickChat} sx={{ color: 'rgb(150,152,157)', fontSize: 25 }} />
+                            <ExpandLess onClick={handleClickVoice} sx={{ color: 'rgb(150,152,157)', fontSize: 25 }} />
                         ) : (
-                            <ExpandMore onClick={handleClickChat} sx={{ color: 'rgb(150,152,157)', fontSize: 25 }} />
+                            <ExpandMore onClick={handleClickVoice} sx={{ color: 'rgb(150,152,157)', fontSize: 25 }} />
                         )}
                         <ListItemText
                             sx={{
