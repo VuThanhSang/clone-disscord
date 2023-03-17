@@ -35,6 +35,9 @@ export const serverSlice = createSlice({
             state.currentChannel = null;
             state.currentServer = null;
         },
+        changeChannel: (state, action) => {
+            state.currentChannel = action.payload;
+        },
     },
     extraReducers: (builder) => {
         builder.addCase(getListServer.pending, (state, action) => {
@@ -88,5 +91,5 @@ export const serverSlice = createSlice({
         });
     },
 });
-export const { clearServer } = serverSlice.actions;
+export const { clearServer, changeChannel } = serverSlice.actions;
 export default serverSlice.reducer;
