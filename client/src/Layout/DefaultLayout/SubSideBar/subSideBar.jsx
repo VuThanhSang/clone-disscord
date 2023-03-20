@@ -23,6 +23,8 @@ import Login from '~/pages/Login';
 import Profile from '~/pages/Profile';
 import { useDispatch, useSelector } from 'react-redux';
 import AddIcon from '@mui/icons-material/Add';
+import PersonAddAlt1Icon from '@mui/icons-material/PersonAddAlt1';
+// import SettingsIcon from '@mui/icons-material/Settings';
 import CreateChannel from './CreateChannel';
 import { changeChannel, getListServer } from '~/features/server/serverSlice';
 const cx = classNames.bind(styles);
@@ -42,14 +44,21 @@ const style = {
 function SubSideBar() {
     const { currentUser, loading } = useSelector((state) => state.auth);
     const { currentServer } = useSelector((state) => state.servers);
+
     const [openModalSetting, setOpenModalSetting] = useState(false);
     const handleOpenModalSetting = () => setOpenModalSetting(true);
     const handleCloseModalSetting = () => setOpenModalSetting(false);
+
     const [openModalAddChannel, setOpenModalAddChannel] = useState(false);
     const handleOpenModalAddChannel = () => {
         setOpenModalAddChannel(true);
     };
     const handleCloseModalAddChannel = () => setOpenModalAddChannel(false);
+
+    const [modalChannelSetting, setModalChannelSetting] = useState(false);
+    const handleOpenChannelSetting = () => setModalChannelSetting(true);
+    const handleCloseChannelSetting = () => setModalChannelSetting(false);
+
     const [openChat, setOpenChat] = useState(true);
     const dispatch = useDispatch();
 
@@ -128,7 +137,7 @@ function SubSideBar() {
                                     }}
                                     unmountOnExit
                                 >
-                                    <List component="div" disablePadding>
+                                    <List component="div" sx={{ display: 'flex' }} disablePadding>
                                         <ListItemButton sx={{ pl: 4 }}>
                                             <TagIcon sx={{ color: 'rgb(150,152,157)', fontSize: 25 }} />
                                             <ListItemText
@@ -145,6 +154,34 @@ function SubSideBar() {
                                                 primary={data[0].name}
                                             />
                                         </ListItemButton>
+                                        {currentServer?.ownerId === currentUser?.data._id && (
+                                            <div style={{ marginRight: 20 }}>
+                                                <PersonAddAlt1Icon
+                                                    sx={{ cursor: 'pointer', fontSize: 15, marginRight: 1 }}
+                                                    onClick={handleOpenModalAddChannel}
+                                                />
+                                                <SettingsIcon
+                                                    sx={{ cursor: 'pointer', fontSize: 15 }}
+                                                    onClick={handleOpenChannelSetting}
+                                                />
+                                                <Modal
+                                                    open={openModalAddChannel}
+                                                    onClose={handleCloseModalAddChannel}
+                                                    aria-labelledby="modal-modal-title"
+                                                    aria-describedby="modal-modal-description"
+                                                >
+                                                    <CreateChannel callback={handleCloseModalAddChannel} />
+                                                </Modal>
+                                                <Modal
+                                                    open={modalChannelSetting}
+                                                    onClose={handleCloseChannelSetting}
+                                                    aria-labelledby="modal-modal-title"
+                                                    aria-describedby="modal-modal-description"
+                                                >
+                                                    <SettingLayout callBack={handleCloseChannelSetting}></SettingLayout>
+                                                </Modal>
+                                            </div>
+                                        )}
                                     </List>
                                 </Collapse>
                             );

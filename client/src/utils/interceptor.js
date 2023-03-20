@@ -9,7 +9,6 @@ export const refreshAccessToken = async () => {
         const res = await instance.post('auth/refresh', {
             withCredentials: true,
         });
-        console.log(res);
         return res.data?.accessToken;
     } catch (error) {
         console.log(error);
@@ -51,10 +50,8 @@ const setUpInterceptor = (store) => {
                 (error?.response?.status === 401 &&
                     !(error.request.responseURL === 'http://localhost:3240/v1/auth/refresh'))
             ) {
-                console.log('hi');
                 originalRequest._retry = true;
                 const access_token = await refreshAccessToken();
-                console.log('refetch token', access_token);
                 if (access_token) {
                     axios.defaults.headers.common['token'] = `Bearer ${access_token}`;
                     const refreshUser = {

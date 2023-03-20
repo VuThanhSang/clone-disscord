@@ -88,8 +88,12 @@ const findInChat = async (findData, sourceId, targetId, type) => {
     const dataChat = await show;
   } catch (error) {}
 };
-const showChannelMessage = async (channelId, paging = 1) => {
+const showChannelMessage = async (channelId, paging) => {
   try {
+    const amount = await getDB()
+      .collection(messageCollectionName)
+      .find({ targetId: channelId })
+      .count();
     const result = await getDB()
       .collection(messageCollectionName)
       .aggregate([
@@ -104,8 +108,11 @@ const showChannelMessage = async (channelId, paging = 1) => {
           },
         },
       ])
+      .sort({ createdAt: -1 })
+      .skip((paging - 1) * 15)
+      .limit(15)
       .toArray();
-    return result;
+    return { data: result, paging: Math.ceil(amount / 15) };
   } catch (error) {
     throw new Error(error);
   }

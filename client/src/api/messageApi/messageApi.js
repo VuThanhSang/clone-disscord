@@ -1,8 +1,10 @@
 import * as httpRequest from '~/utils/HttpRequest';
 
-export const getChannelMessage = async (channelId) => {
+export const getChannelMessage = async (params) => {
     try {
-        const res = await httpRequest.get(`message/showChannelMessage/${channelId}?paging=1`);
+        const res = await httpRequest.get(
+            `message/showChannelMessage/${params.currentChannel}?paging=${params.paging}`,
+        );
         return res;
     } catch (error) {
         console.log(error);

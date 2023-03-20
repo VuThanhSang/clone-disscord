@@ -14,10 +14,12 @@ import styles from './ChatArena.module.scss';
 import { Divider } from '@mui/material';
 import MemberList from '../MemberList';
 import { useDispatch, useSelector } from 'react-redux';
-import { getChannelMessage, sendMessage } from '~/features/message/messageSlice';
+import { getChannelMessage, scrollMessage, sendMessage } from '~/features/message/messageSlice';
 import { useEffect, useRef, useState } from 'react';
 import io from 'socket.io-client';
 import { getListServer, joinChannel } from '~/features/server/serverSlice';
+import { InView } from 'react-intersection-observer';
+import { calculateTimePassed } from '~/utils/utils';
 const cx = classNames.bind(styles);
 const ENDPOINT = 'http://localhost:3240';
 var socket, seletedChatCompare;
@@ -62,16 +64,13 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 
 function ChatArena() {
     const messageInState = useSelector((state) => state.message.data);
+    const paging = useSelector((state) => state.message.paging);
     const [Message, setMessage] = useState('');
     const [SocketConnected, setSocketConnected] = useState(false);
     const { currentUser } = useSelector((state) => state.auth);
     const { currentChannel } = useSelector((state) => state.servers);
-    const messageData = useSelector((state) => state.message.data);
     const dispatch = useDispatch();
-    const getMessage = async () => {
-        const actionResult = await dispatch(getChannelMessage(currentChannel?._id));
-        return actionResult;
-    };
+    const [PagingOfChat, setPagingOfChat] = useState(1);
     const sendMessageHandle = async (event) => {
         if (event.keyCode === 13 && event.target.value !== '') {
             const data = { targetId: currentChannel._id, targetType: 'channel', message: event.target.value };
@@ -83,14 +82,23 @@ function ChatArena() {
                 senderId: currentUser.data?._id,
                 inChat: currentChannel.inChat,
             });
-            getMessage();
+            dispatch(getChannelMessage({ currentChannel: currentChannel?._id, paging: 1 }));
+            divRef.current?.scrollIntoView({ behavior: 'smooth' });
+        }
+    };
+    const scrollTopHandle = async (inView, entry) => {
+        if (inView === true) {
+            if (PagingOfChat <= paging) {
+                setPagingOfChat(PagingOfChat + 1);
+                dispatch(scrollMessage({ currentChannel: currentChannel?._id, paging: PagingOfChat }));
+                divRef.current?.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+            }
         }
     };
     const divRef = useRef(null);
-    console.log(currentChannel);
-    useEffect(() => {
-        divRef.current?.scrollIntoView({ behavior: 'smooth' });
-    });
+    // useEffect(() => {}, []);
+
+    //join socket
     useEffect(() => {
         socket = io(ENDPOINT);
         socket.emit('setup', currentUser.data);
@@ -98,16 +106,22 @@ function ChatArena() {
             setSocketConnected(true);
         });
     }, []);
+    //update while change channel
     useEffect(() => {
         dispatch(joinChannel(currentChannel?._id));
-        getMessage();
+        dispatch(getChannelMessage({ currentChannel: currentChannel?._id, paging: 1 }));
+        setPagingOfChat(1);
         socket.emit('joinChat', currentChannel?._id);
     }, [currentChannel]);
+    //socket
     useEffect(() => {
+        if (PagingOfChat === 1) {
+            divRef.current?.scrollIntoView({ behavior: 'smooth' });
+        }
         socket.on('message Received', (newMessageReceived) => {
             if (currentChannel?._id !== newMessageReceived.targetId) {
             } else {
-                getMessage();
+                dispatch(getChannelMessage({ currentChannel: currentChannel?._id, paging: 1 }));
             }
         });
     });
@@ -115,25 +129,38 @@ function ChatArena() {
         <div className={cx('chat-arena')}>
             <div className={cx('message-container')}>
                 <div className={cx('message-box')}>
-                    {messageData?.map((data, index, array) => {
-                        return messageData?.length - 1 === index ? (
+                    {messageInState?.map((data, index, array) => {
+                        return messageInState?.length - 1 === index ? (
                             <div className={cx('chat')} ref={divRef}>
                                 <Avatar alt="Remy Sharp" src={data.User[0]?.avatar?.data} />
                                 <div className={cx('content')}>
                                     <div className={cx('user')}>
                                         <p className={cx('user-name')}>{data.User[0].username}</p>
-                                        <p className={cx('time')}>to day at 9:25 AM</p>
+                                        <p className={cx('time')}>{data.User[0].createdAt}</p>
                                     </div>
                                     <div className={cx('message')}>{data.message}</div>
                                 </div>
                             </div>
+                        ) : index === 0 ? (
+                            <InView as="div" onChange={scrollTopHandle}>
+                                <div className={cx('chat')}>
+                                    <Avatar alt="Remy Sharp" src={data.User[0]?.avatar?.data} />
+                                    <div className={cx('content')}>
+                                        <div className={cx('user')}>
+                                            <p className={cx('user-name')}>{data.User[0].username}</p>
+                                            <p className={cx('time')}>{data.User[0].createdAt}</p>
+                                        </div>
+                                        <div className={cx('message')}>{data.message}</div>
+                                    </div>
+                                </div>
+                            </InView>
                         ) : (
                             <div className={cx('chat')}>
                                 <Avatar alt="Remy Sharp" src={data.User[0]?.avatar?.data} />
                                 <div className={cx('content')}>
                                     <div className={cx('user')}>
                                         <p className={cx('user-name')}>{data.User[0].username}</p>
-                                        <p className={cx('time')}>to day at 9:25 AM</p>
+                                        <p className={cx('time')}>{calculateTimePassed(data.User[0].createdAt)}</p>
                                     </div>
                                     <div className={cx('message')}>{data.message}</div>
                                 </div>

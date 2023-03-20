@@ -1,0 +1,44 @@
+.wrapper {
+    display: flex;
+    width: 375px;
+    background-color: rgb(43, 45, 49);
+    height: 100vh;
+    overflow: auto;
+    font-size: 16px;
+    color: white;
+    .container {
+        display: flex;
+        flex-direction: column;
+        width: 200px;
+        padding-top: 50px;
+        .slash {
+            margin: auto;
+            height: 2px;
+            width: 180px;
+            background-color: rgb(55, 58, 63);
+            margin-top: 10px;
+            margin-bottom: 10px;
+        }
+        .title {
+            margin: 5px;
+        }
+        .btn {
+            border: none;
+            width: 100%;
+
+            font-size: 16px;
+            align-items: flex-end;
+            display: flex;
+            cursor: pointer;
+            p {
+                color: white;
+                padding: 5px;
+                border-radius: 5px;
+                margin: 2px;
+            }
+            :hover {
+                background-color: rgb(64, 66, 73);
+            }
+        }
+    }
+}
