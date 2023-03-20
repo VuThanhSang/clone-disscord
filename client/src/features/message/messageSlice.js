@@ -3,12 +3,17 @@ import * as messageApi from '~/api/messageApi/messageApi';
 
 export const getChannelMessage = createAsyncThunk('message/ChannelMessage', async (params, thunkAPI) => {
     const res = await messageApi.getChannelMessage(params);
+    console.log(res);
+    return res;
+});
+export const scrollMessage = createAsyncThunk('message/ScrollMessage', async (params, thunkAPI) => {
+    const res = await messageApi.getChannelMessage(params);
     return res;
 });
 export const sendMessage = createAsyncThunk('message/SendMessage', async (params, thunkAPI) => {
     console.log(params);
     const res = await messageApi.sendMessage(params);
-    return 'res';
+    return res;
 });
 export const messageSlice = createSlice({
     name: 'message',
@@ -16,6 +21,7 @@ export const messageSlice = createSlice({
         loading: false,
         error: '',
         data: [],
+        paging: 1,
     },
     reducers: {
         clearMessage: (state, action) => {
@@ -36,7 +42,26 @@ export const messageSlice = createSlice({
             console.log(action.payload);
             state.loading = false;
             state.error = '';
-            state.data = action.payload?.result;
+            state.data = action.payload?.result.data.reverse();
+            state.paging = action.payload?.result.paging;
+        });
+        builder.addCase(scrollMessage.pending, (state, action) => {
+            state.loading = true;
+        });
+        builder.addCase(scrollMessage.rejected, (state, action) => {
+            state.loading = false;
+            state.error = action.error;
+        });
+        builder.addCase(scrollMessage.fulfilled, (state, action) => {
+            if (
+                !(JSON.stringify(state.data) == JSON.stringify(action.payload?.result.data.reverse())) &&
+                action.payload?.result.data.length !== 0
+            ) {
+                state.data = action.payload?.result.data.reverse().concat(state.data);
+            }
+            state.loading = false;
+            state.error = '';
+            // state.data = action.payload?.result.reverse();
         });
         builder.addCase(sendMessage.pending, (state, action) => {
             state.loading = true;

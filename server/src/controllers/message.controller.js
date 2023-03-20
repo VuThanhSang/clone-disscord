@@ -25,7 +25,10 @@ const editMessage = async (req, res) => {
 
 const showChannelMessage = async (req, res) => {
   try {
-    const result = await messageService.showChannelMessage(req.params.id);
+    const result = await messageService.showChannelMessage(
+      req.params.id,
+      req.query.paging
+    );
     res.status(HttpStatusCode.OK).json({ result: result });
   } catch (error) {
     res.status(HttpStatusCode.INTERNAL_SERVER).json({

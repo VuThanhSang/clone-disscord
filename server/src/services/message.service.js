@@ -76,9 +76,9 @@ const showDirectMessage = async (data) => {
     throw new Error(error);
   }
 };
-const showChannelMessage = async (channelId) => {
+const showChannelMessage = async (channelId, paging) => {
   try {
-    const result = await messageModel.showChannelMessage(channelId);
+    const result = await messageModel.showChannelMessage(channelId, paging);
     return result;
   } catch (error) {
     throw new Error(error);

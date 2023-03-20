@@ -8,7 +8,6 @@ function App() {
     const store = useStore();
     setUpInterceptor(store);
     const currentUser = useSelector((state) => state.auth.currentUser);
-    console.log(currentUser);
     let routerCheck = publicRoutes;
 
     if (currentUser) {
