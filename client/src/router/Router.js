@@ -5,7 +5,7 @@ import Following from '~/pages/Following';
 import Home from '~/pages/Home/Home';
 import Login from '~/pages/Login';
 import Profile from '~/pages/Profile';
-import Solution from '~/pages/Solution';
+import Solution from '~/pages/ChannelSetting';
 
 const publicRoutes = [
     { path: configRouter.login, component: Login, layout: null },

@@ -1,15 +1,21 @@
-import { Avatar, Tooltip } from '@mui/material';
+import { styled, alpha } from '@mui/material/styles';
+import { Avatar, Box, Button, InputBase, Modal, Tooltip } from '@mui/material';
 import classNames from 'classnames/bind';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { getListServer } from '~/features/server/serverSlice';
 import styles from './Sidebar.module.scss';
+import CreateServer from './CreateServer';
 
 const cx = classNames.bind(styles);
+
 function Sidebar() {
     const { server, loading } = useSelector((state) => state.servers);
-    const dispatch = useDispatch();
-
+    const [openModalAddServer, setOpenModalAddServer] = useState(false);
+    const handleOpenModalAddServer = () => {
+        setOpenModalAddServer(true);
+    };
+    const handleCloseModalAddServer = () => setOpenModalAddServer(false);
     return (
         <div className={cx('wrapper')}>
             <div className={cx('box')}>
@@ -20,9 +26,9 @@ function Sidebar() {
                 />
             </div>
             <div className={cx('slash')}></div>
-            {server?.map((data) => {
+            {server?.map((data, index) => {
                 return (
-                    <div className={cx('box')}>
+                    <div className={cx('box')} key={index}>
                         <Tooltip title={data.name} placement="right">
                             <Avatar
                                 sx={{ width: 45, height: 45 }}
@@ -33,6 +39,23 @@ function Sidebar() {
                     </div>
                 );
             })}
+            <div className={cx('box')} onClick={handleOpenModalAddServer}>
+                <Tooltip title="Create New server" placement="right">
+                    <Avatar
+                        sx={{ width: 45, height: 45, backgroundColor: '#2B2D31' }}
+                        src="https://static.vecteezy.com/system/resources/previews/000/365/670/original/plus-vector-icon.jpg"
+                        alt="none"
+                    />
+                </Tooltip>
+            </div>
+            <Modal
+                open={openModalAddServer}
+                onClose={handleCloseModalAddServer}
+                aria-labelledby="modal-modal-title"
+                aria-describedby="modal-modal-description"
+            >
+                <CreateServer callback={handleCloseModalAddServer} />
+            </Modal>
         </div>
     );
 }

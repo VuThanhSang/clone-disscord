@@ -3,7 +3,6 @@ import * as messageApi from '~/api/messageApi/messageApi';
 
 export const getChannelMessage = createAsyncThunk('message/ChannelMessage', async (params, thunkAPI) => {
     const res = await messageApi.getChannelMessage(params);
-    console.log(res);
     return res;
 });
 export const scrollMessage = createAsyncThunk('message/ScrollMessage', async (params, thunkAPI) => {
@@ -39,7 +38,6 @@ export const messageSlice = createSlice({
             state.error = action.error;
         });
         builder.addCase(getChannelMessage.fulfilled, (state, action) => {
-            console.log(action.payload);
             state.loading = false;
             state.error = '';
             state.data = action.payload?.result.data.reverse();
@@ -61,7 +59,6 @@ export const messageSlice = createSlice({
             }
             state.loading = false;
             state.error = '';
-            // state.data = action.payload?.result.reverse();
         });
         builder.addCase(sendMessage.pending, (state, action) => {
             state.loading = true;

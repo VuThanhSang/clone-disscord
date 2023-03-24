@@ -18,8 +18,16 @@ const addMember = async (data) => {
     throw new Error(error);
   }
 };
-
+const deleteServer = async (id) => {
+  try {
+    const result = await serverModel.deleteServer(id);
+    return result;
+  } catch (error) {
+    throw new Error(error);
+  }
+};
 module.exports = {
   create,
   addMember,
+  deleteServer,
 };
