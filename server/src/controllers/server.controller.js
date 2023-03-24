@@ -23,7 +23,19 @@ const addMember = async (req, res) => {
   }
 };
 
+const deleteServer = async (req, res) => {
+  try {
+    const result = await serverService.deleteServer(req.params.id);
+    res.status(HttpStatusCode.OK).json({ result: result });
+  } catch (error) {
+    res.status(HttpStatusCode.INTERNAL_SERVER).json({
+      error: new Error(error).message,
+    });
+  }
+};
+
 module.exports = {
   create,
   addMember,
+  deleteServer,
 };

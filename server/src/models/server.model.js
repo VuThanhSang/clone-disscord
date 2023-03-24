@@ -89,8 +89,20 @@ const showChannel = async (serverId) => {
   }
 };
 
+const deleteServer = async (id) => {
+  try {
+    await getDB()
+      .collection(serverCollectionName)
+      .deleteOne({ _id: ObjectId(id) });
+    await channelModel.deleteChannelOfServer(id);
+    return "delete Successfully";
+  } catch (error) {
+    throw new Error(error);
+  }
+};
 module.exports = {
   create,
   addMember,
   showChannel,
+  deleteServer,
 };

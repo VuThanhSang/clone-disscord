@@ -1,7 +1,7 @@
 const Joi = require("joi");
 const { getDB } = require("../config/mongodb");
 const { ObjectId } = require("mongodb");
-
+const messageModel = require("./message.model");
 const channelCollectionName = "Channel";
 
 const channelCollectionSchema = Joi.object({
@@ -67,11 +67,38 @@ const leaveChannel = async (id, userId) => {
       .collection(channelCollectionName)
       .updateMany({ inChat: { $in: [userId] } }, { $pull: { inChat: userId } });
     return await findOneById(id);
-  } catch (error) {}
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+
+const deleteChannel = async (id) => {
+  try {
+    await getDB()
+      .collection(channelCollectionName)
+      .deleteOne({ _id: ObjectId(id) });
+    await messageModel.deleteMessageOfChannel(id);
+    return "delete Successfully";
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+
+const deleteChannelOfServer = async (serverId) => {
+  try {
+    await getDB()
+      .collection(channelCollectionName)
+      .deleteMany({ serverId: serverId });
+    return "delete Successfully";
+  } catch (error) {
+    throw new Error(error);
+  }
 };
 
 module.exports = {
   create,
   joinChannel,
   leaveChannel,
+  deleteChannel,
+  deleteChannelOfServer,
 };

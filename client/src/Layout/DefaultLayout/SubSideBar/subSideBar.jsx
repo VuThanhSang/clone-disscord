@@ -5,42 +5,18 @@ import MicIcon from '@mui/icons-material/Mic';
 import HeadphonesIcon from '@mui/icons-material/Headphones';
 import SettingsIcon from '@mui/icons-material/Settings';
 
-import ListSubheader from '@mui/material/ListSubheader';
-import List from '@mui/material/List';
-import ListItemButton from '@mui/material/ListItemButton';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import ListItemText from '@mui/material/ListItemText';
-import Collapse from '@mui/material/Collapse';
-import ExpandLess from '@mui/icons-material/ExpandLess';
 import ExpandMore from '@mui/icons-material/ExpandMore';
-import StarBorder from '@mui/icons-material/StarBorder';
-import VolumeUpIcon from '@mui/icons-material/VolumeUp';
-import TagIcon from '@mui/icons-material/Tag';
+
 import { useEffect, useState } from 'react';
-import { Box, ListItem, Modal, Typography } from '@mui/material';
+import { Box, Fade, ListItem, Menu, MenuItem, Modal, Typography } from '@mui/material';
 import SettingLayout from '~/Layout/SettingLayout';
-import Login from '~/pages/Login';
 import Profile from '~/pages/Profile';
 import { useDispatch, useSelector } from 'react-redux';
-import AddIcon from '@mui/icons-material/Add';
-import PersonAddAlt1Icon from '@mui/icons-material/PersonAddAlt1';
-// import SettingsIcon from '@mui/icons-material/Settings';
-import CreateChannel from './CreateChannel';
-import { changeChannel, getListServer } from '~/features/server/serverSlice';
+import Channel from './Channel';
+
+import PersonAddAltIcon from '@mui/icons-material/PersonAddAlt';
+import AddCircleIcon from '@mui/icons-material/AddCircle';
 const cx = classNames.bind(styles);
-
-const style = {
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    width: 400,
-    bgcolor: 'background.paper',
-    border: '2px solid #000',
-    boxShadow: 24,
-    p: 4,
-};
-
 function SubSideBar() {
     const { currentUser, loading } = useSelector((state) => state.auth);
     const { currentServer } = useSelector((state) => state.servers);
@@ -49,203 +25,92 @@ function SubSideBar() {
     const handleOpenModalSetting = () => setOpenModalSetting(true);
     const handleCloseModalSetting = () => setOpenModalSetting(false);
 
-    const [openModalAddChannel, setOpenModalAddChannel] = useState(false);
-    const handleOpenModalAddChannel = () => {
-        setOpenModalAddChannel(true);
+    const [anchorEl, setAnchorEl] = useState(null);
+    const open = Boolean(anchorEl);
+    const handleClick = (event) => {
+        setAnchorEl(event.currentTarget);
     };
-    const handleCloseModalAddChannel = () => setOpenModalAddChannel(false);
-
-    const [modalChannelSetting, setModalChannelSetting] = useState(false);
-    const handleOpenChannelSetting = () => setModalChannelSetting(true);
-    const handleCloseChannelSetting = () => setModalChannelSetting(false);
-
-    const [openChat, setOpenChat] = useState(true);
-    const dispatch = useDispatch();
-
-    const handleClickChat = () => {
-        setOpenChat(!openChat);
+    const handleClose = () => {
+        setAnchorEl(null);
     };
-    const [openVoice, setOpenVoice] = useState(true);
-
-    const handleClickVoice = () => {
-        setOpenVoice(!openVoice);
-    };
-    useEffect(() => {
-        dispatch(getListServer());
-    }, [openModalAddChannel]);
-    // console.log(currentServer);
     return (
         <div className={cx('wrapper')}>
             <div className={cx('server-name')}>
-                <span>
+                <span
+                    aria-controls={open ? 'demo-positioned-menu' : undefined}
+                    aria-haspopup="true"
+                    aria-expanded={open ? 'true' : undefined}
+                    onClick={handleClick}
+                >
                     <p>SxS</p> <ExpandMore className={cx('icon')}></ExpandMore>
                 </span>
-            </div>
-
-            <div className={cx('channels')}>
-                <List
-                    sx={{
-                        width: '100%',
-                        bgcolor: 'rgb(47,49,54)',
-                        color: 'rgb(150,152,157)',
+                <Menu
+                    id="fade-menu"
+                    MenuListProps={{
+                        'aria-labelledby': 'fade-button',
                     }}
-                    component="nav"
-                    aria-labelledby="nested-list-subheader"
-                >
-                    <ListItem>
-                        {openChat ? (
-                            <ExpandLess onClick={handleClickChat} sx={{ color: 'rgb(150,152,157)', fontSize: 25 }} />
-                        ) : (
-                            <ExpandMore onClick={handleClickChat} sx={{ color: 'rgb(150,152,157)', fontSize: 25 }} />
-                        )}
-                        <ListItemText
-                            sx={{
-                                marginLeft: 0.5,
-                                '&:hover': { color: '#fff' },
-                            }}
-                            primaryTypographyProps={{
-                                fontSize: 13,
-                                fontWeight: 'medium',
-                                letterSpacing: 0,
-                            }}
-                            primary="KÊNH CHAT"
-                        />
-                        {currentServer?.ownerId === currentUser?.data._id && (
-                            <div>
-                                <AddIcon sx={{ cursor: 'pointer' }} onClick={handleOpenModalAddChannel} />
-                                <Modal
-                                    open={openModalAddChannel}
-                                    onClose={handleCloseModalAddChannel}
-                                    aria-labelledby="modal-modal-title"
-                                    aria-describedby="modal-modal-description"
-                                >
-                                    <CreateChannel callback={handleCloseModalAddChannel} />
-                                    {/* <SettingLayout callBack={handleCloseModalAddChannel}>
-                                    </SettingLayout> */}
-                                </Modal>
-                            </div>
-                        )}
-                    </ListItem>
-                    {currentServer?.channel.map((data) => {
-                        if (data[0]?.type === 'chat') {
-                            return (
-                                <Collapse
-                                    in={openChat}
-                                    timeout="auto"
-                                    onClick={() => {
-                                        dispatch(changeChannel(data[0]));
-                                    }}
-                                    unmountOnExit
-                                >
-                                    <List component="div" sx={{ display: 'flex' }} disablePadding>
-                                        <ListItemButton sx={{ pl: 4 }}>
-                                            <TagIcon sx={{ color: 'rgb(150,152,157)', fontSize: 25 }} />
-                                            <ListItemText
-                                                sx={{
-                                                    marginLeft: 0.5,
-
-                                                    '&:hover': { color: '#fff' },
-                                                }}
-                                                primaryTypographyProps={{
-                                                    fontSize: 13,
-                                                    fontWeight: 'medium',
-                                                    letterSpacing: 0,
-                                                }}
-                                                primary={data[0].name}
-                                            />
-                                        </ListItemButton>
-                                        {currentServer?.ownerId === currentUser?.data._id && (
-                                            <div style={{ marginRight: 20 }}>
-                                                <PersonAddAlt1Icon
-                                                    sx={{ cursor: 'pointer', fontSize: 15, marginRight: 1 }}
-                                                    onClick={handleOpenModalAddChannel}
-                                                />
-                                                <SettingsIcon
-                                                    sx={{ cursor: 'pointer', fontSize: 15 }}
-                                                    onClick={handleOpenChannelSetting}
-                                                />
-                                                <Modal
-                                                    open={openModalAddChannel}
-                                                    onClose={handleCloseModalAddChannel}
-                                                    aria-labelledby="modal-modal-title"
-                                                    aria-describedby="modal-modal-description"
-                                                >
-                                                    <CreateChannel callback={handleCloseModalAddChannel} />
-                                                </Modal>
-                                                <Modal
-                                                    open={modalChannelSetting}
-                                                    onClose={handleCloseChannelSetting}
-                                                    aria-labelledby="modal-modal-title"
-                                                    aria-describedby="modal-modal-description"
-                                                >
-                                                    <SettingLayout callBack={handleCloseChannelSetting}></SettingLayout>
-                                                </Modal>
-                                            </div>
-                                        )}
-                                    </List>
-                                </Collapse>
-                            );
-                        }
-                    })}
-                </List>
-
-                <List
-                    sx={{
-                        width: '100%',
-                        bgcolor: 'rgb(47,49,54)',
-                        color: 'rgb(150,152,157)',
+                    anchorEl={anchorEl}
+                    open={open}
+                    onClose={handleClose}
+                    TransitionComponent={Fade}
+                    anchorOrigin={{
+                        vertical: 'top',
+                        horizontal: 'center',
                     }}
-                    component="nav"
-                    aria-labelledby="nested-list-subheader"
+                    transformOrigin={{
+                        vertical: 'top',
+                        horizontal: 'center',
+                    }}
+                    PaperProps={{
+                        elevation: 0,
+                        sx: {
+                            overflow: 'visible',
+                            filter: 'drop-shadow(0px 2px 8px rgba(0,0,0,0.32))',
+                            mt: 1.5,
+                            bgcolor: '#111214',
+                            color: '#fff',
+                            '& .MuiAvatar-root': {
+                                width: 32,
+                                height: 32,
+                                ml: -0.5,
+                                mr: 1,
+                            },
+
+                            '&:before': {
+                                content: '""',
+                                display: 'block',
+                                position: 'absolute',
+                                top: 0,
+                                right: 14,
+                                width: 10,
+                                height: 10,
+                                transform: 'translateY(-50%) rotate(45deg)',
+                                zIndex: 0,
+                            },
+                        },
+                    }}
                 >
-                    <ListItemButton>
-                        {openVoice ? (
-                            <ExpandLess onClick={handleClickVoice} sx={{ color: 'rgb(150,152,157)', fontSize: 25 }} />
-                        ) : (
-                            <ExpandMore onClick={handleClickVoice} sx={{ color: 'rgb(150,152,157)', fontSize: 25 }} />
-                        )}
-                        <ListItemText
-                            sx={{
-                                marginLeft: 0.5,
-
-                                '&:hover': { color: '#fff' },
-                            }}
-                            primaryTypographyProps={{
-                                fontSize: 13,
-                                fontWeight: 'medium',
-                                letterSpacing: 0,
-                            }}
-                            primary="KÊNH THOẠI"
-                        />
-                    </ListItemButton>
-                    {currentServer?.channel.map((data) => {
-                        if (data[0]?.type === 'voiceChat') {
-                            return (
-                                <Collapse in={openVoice} timeout="auto" unmountOnExit>
-                                    <List component="div" disablePadding>
-                                        <ListItemButton sx={{ pl: 4 }}>
-                                            <VolumeUpIcon sx={{ color: 'rgb(150,152,157)', fontSize: 25 }} />
-                                            <ListItemText
-                                                sx={{
-                                                    marginLeft: 0.5,
-
-                                                    '&:hover': { color: '#fff' },
-                                                }}
-                                                primaryTypographyProps={{
-                                                    fontSize: 13,
-                                                    fontWeight: 'medium',
-                                                    letterSpacing: 0,
-                                                }}
-                                                primary={data[0].name}
-                                            />
-                                        </ListItemButton>
-                                    </List>
-                                </Collapse>
-                            );
-                        }
-                    })}
-                </List>
+                    <MenuItem onClick={handleClose}>
+                        <div className={cx('dropdown-item')}>
+                            <p>Invite People</p>
+                            <PersonAddAltIcon />
+                        </div>
+                    </MenuItem>
+                    <MenuItem onClick={handleClose}>
+                        <div className={cx('dropdown-item')}>
+                            <p> Server Setting</p>
+                            <SettingsIcon />
+                        </div>
+                    </MenuItem>
+                    <MenuItem onClick={handleClose}>
+                        <div className={cx('dropdown-item')}>
+                            <p> Create Channel </p>
+                            <AddCircleIcon />
+                        </div>
+                    </MenuItem>
+                </Menu>
             </div>
+            <Channel />
             <div className={cx('control')}>
                 <div className={cx('info')}>
                     <Avatar className={cx('avatar')} alt="Remy Sharp" src={currentUser?.data.avatar?.data} />
@@ -260,18 +125,16 @@ function SubSideBar() {
                 <SettingsIcon className={cx('icon')} onClick={handleOpenModalSetting}>
                     Open modal
                 </SettingsIcon>
-                <div>
-                    <Modal
-                        open={openModalSetting}
-                        onClose={handleCloseModalSetting}
-                        aria-labelledby="modal-modal-title"
-                        aria-describedby="modal-modal-description"
-                    >
-                        <SettingLayout callBack={handleCloseModalSetting}>
-                            <Profile />
-                        </SettingLayout>
-                    </Modal>
-                </div>
+                <Modal
+                    open={openModalSetting}
+                    onClose={handleCloseModalSetting}
+                    aria-labelledby="modal-modal-title"
+                    aria-describedby="modal-modal-description"
+                >
+                    <SettingLayout callBack={handleCloseModalSetting}>
+                        <Profile />
+                    </SettingLayout>
+                </Modal>
             </div>
         </div>
     );

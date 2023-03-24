@@ -83,6 +83,17 @@ const deleteMessage = async (id) => {
     throw new Error(error);
   }
 };
+
+const deleteMessageOfChannel = async (id) => {
+  try {
+    await getDB()
+      .collection(messageCollectionName)
+      .deleteMany({ targetId: id, targetType: "channel" });
+    return "deleted successfully";
+  } catch (error) {
+    throw new Error(error);
+  }
+};
 const findInChat = async (findData, sourceId, targetId, type) => {
   try {
     const dataChat = await show;
@@ -124,4 +135,5 @@ module.exports = {
   showChannelMessage,
   findOneById,
   deleteMessage,
+  deleteMessageOfChannel,
 };

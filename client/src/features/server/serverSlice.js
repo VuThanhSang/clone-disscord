@@ -5,6 +5,14 @@ export const getListServer = createAsyncThunk('user/listServer', async (params, 
     const res = await serverApi.getListServer();
     return res;
 });
+export const createServer = createAsyncThunk('server/Create', async (params, thunkAPI) => {
+    const res = await serverApi.createServer({ name: params });
+    return res;
+});
+export const deleteServer = createAsyncThunk('server/delete', async (params, thunkAPI) => {
+    const res = await serverApi.deleteServer(params);
+    return res;
+});
 export const createChannel = createAsyncThunk('channel/Create', async (params, thunkAPI) => {
     // console.log(params);
     const res = await serverApi.createChannel(params);
@@ -53,6 +61,32 @@ export const serverSlice = createSlice({
             state.server = action.payload?.result;
             state.currentServer = action.payload?.result[0];
             state.currentChannel = state.currentServer?.channel[0][0];
+        });
+        builder.addCase(createServer.pending, (state, action) => {
+            state.loading = true;
+        });
+        builder.addCase(createServer.rejected, (state, action) => {
+            state.loading = false;
+            state.error = action.error;
+        });
+        builder.addCase(createServer.fulfilled, (state, action) => {
+            state.loading = false;
+            state.error = '';
+            // state.server = action.payload?.result;
+            console.log(action.payload);
+        });
+        builder.addCase(deleteServer.pending, (state, action) => {
+            state.loading = true;
+        });
+        builder.addCase(deleteServer.rejected, (state, action) => {
+            state.loading = false;
+            state.error = action.error;
+        });
+        builder.addCase(deleteServer.fulfilled, (state, action) => {
+            state.loading = false;
+            state.error = '';
+            // state.server = action.payload?.result;
+            console.log(action.payload);
         });
         builder.addCase(joinChannel.pending, (state, action) => {
             state.loading = true;

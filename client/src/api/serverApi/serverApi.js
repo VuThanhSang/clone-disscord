@@ -1,5 +1,21 @@
 import * as httpRequest from '~/utils/HttpRequest';
 
+export const createServer = async (data) => {
+    try {
+        const res = await httpRequest.post('server/create', { ...data });
+        return res;
+    } catch (error) {
+        console.log(error);
+    }
+};
+export const deleteServer = async (data) => {
+    try {
+        const res = await httpRequest.put(`server/delete/${data}`);
+        return res;
+    } catch (error) {
+        console.log(error);
+    }
+};
 export const getListServer = async () => {
     try {
         const res = await httpRequest.get('user/listServerOfUser');
@@ -21,7 +37,6 @@ export const createChannel = async (data) => {
 export const joinChannel = async (channelId) => {
     try {
         const res = await httpRequest.post(`channel/join/${channelId}`);
-        console.log(res);
         return res;
     } catch (error) {
         console.log(error);

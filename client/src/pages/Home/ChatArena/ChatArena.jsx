@@ -91,7 +91,7 @@ function ChatArena() {
             if (PagingOfChat <= paging) {
                 setPagingOfChat(PagingOfChat + 1);
                 dispatch(scrollMessage({ currentChannel: currentChannel?._id, paging: PagingOfChat }));
-                divRef.current?.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+                divRef.current?.scrollIntoView({ block: 'nearest', behavior: 'auto' });
             }
         }
     };
@@ -131,31 +131,31 @@ function ChatArena() {
                 <div className={cx('message-box')}>
                     {messageInState?.map((data, index, array) => {
                         return messageInState?.length - 1 === index ? (
-                            <div className={cx('chat')} ref={divRef}>
+                            <div className={cx('chat')} key={index} ref={divRef}>
                                 <Avatar alt="Remy Sharp" src={data.User[0]?.avatar?.data} />
                                 <div className={cx('content')}>
                                     <div className={cx('user')}>
                                         <p className={cx('user-name')}>{data.User[0].username}</p>
-                                        <p className={cx('time')}>{data.User[0].createdAt}</p>
+                                        <p className={cx('time')}>{calculateTimePassed(data.User[0].createdAt)}</p>
                                     </div>
                                     <div className={cx('message')}>{data.message}</div>
                                 </div>
                             </div>
                         ) : index === 0 ? (
-                            <InView as="div" onChange={scrollTopHandle}>
+                            <InView as="div" key={index} onChange={scrollTopHandle}>
                                 <div className={cx('chat')}>
                                     <Avatar alt="Remy Sharp" src={data.User[0]?.avatar?.data} />
                                     <div className={cx('content')}>
                                         <div className={cx('user')}>
                                             <p className={cx('user-name')}>{data.User[0].username}</p>
-                                            <p className={cx('time')}>{data.User[0].createdAt}</p>
+                                            <p className={cx('time')}>{calculateTimePassed(data.User[0].createdAt)}</p>
                                         </div>
                                         <div className={cx('message')}>{data.message}</div>
                                     </div>
                                 </div>
                             </InView>
                         ) : (
-                            <div className={cx('chat')}>
+                            <div className={cx('chat')} key={index}>
                                 <Avatar alt="Remy Sharp" src={data.User[0]?.avatar?.data} />
                                 <div className={cx('content')}>
                                     <div className={cx('user')}>
