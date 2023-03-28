@@ -9,11 +9,12 @@ import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getListServer } from '~/features/server/serverSlice';
 import { refreshAccessToken } from '~/utils/interceptor';
+import VoiceChat from './voiceChat';
 const cx = classNames.bind(styles);
 
 function Home() {
     let { currentUser, loading } = useSelector((state) => state.auth);
-    let { currentServer } = useSelector((state) => state.servers);
+    let { currentChannel } = useSelector((state) => state.servers);
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
@@ -22,10 +23,14 @@ function Home() {
     }, []);
     return (
         <div>
-            {currentUser && (
+            {currentChannel?.type === 'chat' ? (
                 <div className={cx('wrapper')}>
                     <Header />
                     <ChatArena />
+                </div>
+            ) : (
+                <div className={cx('wrapper')}>
+                    <VoiceChat />
                 </div>
             )}
         </div>
