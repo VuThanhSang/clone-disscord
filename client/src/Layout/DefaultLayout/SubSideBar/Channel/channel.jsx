@@ -194,7 +194,7 @@ function Channel() {
                                         <ListItem
                                             sx={{ pl: 4, cursor: 'pointer' }}
                                             onClick={() => {
-                                                // dispatch(changeChannel(data[0]));
+                                                dispatch(changeChannel(data[0]));
                                             }}
                                         >
                                             <VolumeUpIcon sx={{ color: 'rgb(150,152,157)', fontSize: 25 }} />

@@ -62,6 +62,7 @@ export const serverSlice = createSlice({
             state.currentServer = action.payload?.result[0];
             state.currentChannel = state.currentServer?.channel[0][0];
         });
+
         builder.addCase(createServer.pending, (state, action) => {
             state.loading = true;
         });
@@ -75,6 +76,7 @@ export const serverSlice = createSlice({
             // state.server = action.payload?.result;
             console.log(action.payload);
         });
+
         builder.addCase(deleteServer.pending, (state, action) => {
             state.loading = true;
         });
@@ -88,6 +90,7 @@ export const serverSlice = createSlice({
             // state.server = action.payload?.result;
             console.log(action.payload);
         });
+
         builder.addCase(joinChannel.pending, (state, action) => {
             state.loading = true;
         });
@@ -100,6 +103,7 @@ export const serverSlice = createSlice({
             state.error = '';
             // state.currentChannel = state.payload?.result;
         });
+
         builder.addCase(leaveChannel.pending, (state, action) => {
             state.loading = true;
         });
@@ -112,6 +116,7 @@ export const serverSlice = createSlice({
             state.error = '';
             state.currentChannel = state.currentServer?.channel[0][0];
         });
+
         builder.addCase(createChannel.pending, (state, action) => {
             state.loading = true;
         });
