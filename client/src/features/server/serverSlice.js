@@ -18,6 +18,10 @@ export const createChannel = createAsyncThunk('channel/Create', async (params, t
     const res = await serverApi.createChannel(params);
     return res;
 });
+export const getUserInChat = createAsyncThunk('channel/getUserInChat', async (params, thunkAPI) => {
+    const res = await serverApi.getUserInChat(params);
+    return res;
+});
 export const joinChannel = createAsyncThunk('user/joinChannel', async (params, thunkAPI) => {
     const res = await serverApi.joinChannel(params);
     return res;
@@ -32,6 +36,7 @@ export const serverSlice = createSlice({
         loading: false,
         error: '',
         server: [],
+        inChat: [],
         currentServer: null,
         currentChannel: null,
     },
@@ -89,6 +94,19 @@ export const serverSlice = createSlice({
             state.error = '';
             // state.server = action.payload?.result;
             console.log(action.payload);
+        });
+
+        builder.addCase(getUserInChat.pending, (state, action) => {
+            state.loading = true;
+        });
+        builder.addCase(getUserInChat.rejected, (state, action) => {
+            state.loading = false;
+            state.error = action.error;
+        });
+        builder.addCase(getUserInChat.fulfilled, (state, action) => {
+            state.loading = false;
+            state.error = '';
+            state.inChat = action.payload?.result[0]?.User;
         });
 
         builder.addCase(joinChannel.pending, (state, action) => {

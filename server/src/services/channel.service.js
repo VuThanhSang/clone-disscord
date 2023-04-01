@@ -27,8 +27,18 @@ const leaveChannel = async (channelId, userId) => {
   }
 };
 
+const getUserInChat = async (channelId) => {
+  try {
+    const result = await channelModel.getUserInChat(channelId);
+    return result;
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+
 module.exports = {
   create,
   joinChannel,
   leaveChannel,
+  getUserInChat,
 };

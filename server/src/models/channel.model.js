@@ -94,11 +94,35 @@ const deleteChannelOfServer = async (serverId) => {
     throw new Error(error);
   }
 };
-
+const getUserInChat = async (channelId) => {
+  try {
+    const result = await getDB()
+      .collection(channelCollectionName)
+      .aggregate([
+        { $match: { _id: ObjectId(channelId) } },
+        { $unwind: "$inChat" },
+        { $addFields: { userId: { $toObjectId: "$inChat" } } },
+        {
+          $lookup: {
+            from: "Users",
+            localField: "userId",
+            foreignField: "_id",
+            as: "User",
+          },
+        },
+        { $group: { _id: "$_id", User: { $push: "$User" } } },
+      ])
+      .toArray();
+    return result;
+  } catch (error) {
+    throw new Error(error);
+  }
+};
 module.exports = {
   create,
   joinChannel,
   leaveChannel,
   deleteChannel,
   deleteChannelOfServer,
+  getUserInChat,
 };

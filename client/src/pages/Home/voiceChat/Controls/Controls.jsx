@@ -9,8 +9,7 @@ import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 
 function Controls(props) {
     const client = useClient();
-    const { tracks, setStart } = props;
-    const [track, setTrack] = useState({ video: true, audio: true });
+    const { tracks, setStart, track, setTrack } = props;
     const leaveChannel = async () => {
         await client.leave();
         client.removeAllListeners();
@@ -27,7 +26,7 @@ function Controls(props) {
         } else if (type === 'video') {
             await tracks[1].setEnabled(!track.video);
             setTrack((ps) => {
-                return { ...ps, video: !ps.audio };
+                return { ...ps, video: !ps.video };
             });
         }
     };

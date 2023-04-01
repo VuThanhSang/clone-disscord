@@ -11,7 +11,16 @@ const create = async (req, res) => {
     });
   }
 };
-
+const getUserInChat = async (req, res) => {
+  try {
+    const result = await channelService.getUserInChat(req.params.id);
+    res.status(HttpStatusCode.OK).json({ result: result });
+  } catch (error) {
+    res.status(HttpStatusCode.INTERNAL_SERVER).json({
+      error: new Error(error).message,
+    });
+  }
+};
 const joinChannel = async (req, res) => {
   try {
     const result = await channelService.joinChannel(
@@ -44,4 +53,5 @@ module.exports = {
   create,
   joinChannel,
   leaveChannel,
+  getUserInChat,
 };
