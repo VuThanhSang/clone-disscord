@@ -6,15 +6,19 @@ import Videos from './Videos';
 import { useDispatch, useSelector } from 'react-redux';
 import { joinChannel } from '~/features/server/serverSlice';
 import VolumeUpIcon from '@mui/icons-material/VolumeUp';
+import InboxIcon from '@mui/icons-material/Inbox';
+import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
+import ChatBubbleIcon from '@mui/icons-material/ChatBubble';
+import ViewComfyIcon from '@mui/icons-material/ViewComfy';
 function VoiceChat(props) {
-    const { currentUser } = useSelector((state) => state.auth);
     const { currentChannel } = useSelector((state) => state.servers);
     const [users, setUsers] = useState([]);
     const [start, setStart] = useState(false);
     const client = useClient();
     const { ready, tracks } = useMicrophoneAndCameraTracks();
-    const dispatch = useDispatch();
+    const [track, setTrack] = useState({ video: true, audio: true });
 
+    const dispatch = useDispatch();
     useEffect(() => {
         // console.log(users);
 
@@ -65,17 +69,28 @@ function VoiceChat(props) {
             }
         }
     }, [channelName, client, ready, tracks]);
+    useEffect(() => {
+        dispatch(joinChannel(currentChannel?._id));
+    }, []);
     return (
         <Grid container direction="column" style={{ height: '100%', backgroundColor: 'black' }}>
-            <Grid item sx={{ height: '5%', display: 'flex' }}>
-                <VolumeUpIcon sx={{ color: 'white' }} />
-                <p style={{ color: 'white', fontSize: 18 }}>{currentChannel.name}</p>
+            <Grid item sx={{ height: '5%', padding: 2, display: 'flex', justifyContent: 'space-between' }}>
+                <div style={{ display: 'flex' }}>
+                    <VolumeUpIcon sx={{ color: 'white' }} />
+                    <p style={{ color: 'white', fontSize: 18 }}>{currentChannel?.name}</p>
+                </div>
+                <div style={{ display: 'flex' }}>
+                    <ViewComfyIcon style={{ color: 'white', marginLeft: 3, cursor: 'pointer' }} />
+                    <InboxIcon style={{ color: 'white', marginLeft: 20, cursor: 'pointer' }} />
+                    <MoreHorizIcon style={{ color: 'white', marginLeft: 20, cursor: 'pointer' }} />
+                    <ChatBubbleIcon style={{ color: 'white', marginLeft: 20, cursor: 'pointer' }} />
+                </div>
             </Grid>
             <Grid item sx={{ height: '85%' }}>
-                {start && tracks && <Videos tracks={tracks} users={users} />}
+                {start && tracks && <Videos tracks={tracks} users={users} track={track} setTrack={setTrack} />}
             </Grid>
             <Grid item sx={{ height: '10%' }}>
-                {ready && tracks && <Controls tracks={tracks} setStart={setStart} />}
+                {ready && tracks && <Controls tracks={tracks} setStart={setStart} track={track} setTrack={setTrack} />}
             </Grid>
         </Grid>
     );

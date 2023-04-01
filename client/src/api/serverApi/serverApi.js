@@ -50,3 +50,11 @@ export const leaveChannel = async (channelId) => {
         console.log(error);
     }
 };
+export const getUserInChat = async (channelId) => {
+    try {
+        const res = await httpRequest.get(`channel/getUserInChat/${channelId}`);
+        return res;
+    } catch (error) {
+        console.log(error);
+    }
+};
