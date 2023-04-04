@@ -59,7 +59,7 @@ function Videos(props) {
                             position: 'relative',
                         }}
                     >
-                        <Avatar src={currentUser.data.avatar.data} alt="gege" sx={{ width: 100, height: 100 }} />
+                        <Avatar src={currentUser.data?.avatar?.data} alt="gege" sx={{ width: 100, height: 100 }} />
                         <p style={{ position: 'absolute', bottom: 10, left: 5, fontSize: 12 }}>
                             {currentUser.data.username}
                         </p>
@@ -94,7 +94,7 @@ function Videos(props) {
                                       position: 'relative',
                                   }}
                               >
-                                  <Avatar src={data[0].avatar.data} alt="gege" sx={{ width: 100, height: 100 }} />
+                                  <Avatar src={data[0]?.avatar?.data} alt="gege" sx={{ width: 100, height: 100 }} />
                                   <p
                                       style={{
                                           position: 'absolute',

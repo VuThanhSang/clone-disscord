@@ -1,7 +1,7 @@
 import { styled, alpha } from '@mui/material/styles';
 
 import InputBase from '@mui/material/InputBase';
-
+import { useDropzone } from 'react-dropzone';
 import SearchIcon from '@mui/icons-material/Search';
 import EmojiEmotionsIcon from '@mui/icons-material/EmojiEmotions';
 import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
@@ -11,15 +11,16 @@ import classNames from 'classnames/bind';
 import Avatar from '@mui/material/Avatar';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import styles from './ChatArena.module.scss';
-import { Divider } from '@mui/material';
+import { Button, Divider } from '@mui/material';
 import MemberList from '../MemberList';
 import { useDispatch, useSelector } from 'react-redux';
 import { getChannelMessage, scrollMessage, sendMessage } from '~/features/message/messageSlice';
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { getListServer, joinChannel } from '~/features/server/serverSlice';
 import { InView } from 'react-intersection-observer';
 import { calculateTimePassed } from '~/utils/utils';
 import io from 'socket.io-client';
+import DeleteIcon from '@mui/icons-material/Delete';
 const cx = classNames.bind(styles);
 const ENDPOINT = 'http://localhost:3240';
 var socket, seletedChatCompare;
@@ -71,6 +72,17 @@ function ChatArena() {
     const { currentChannel } = useSelector((state) => state.servers);
     const dispatch = useDispatch();
     const [PagingOfChat, setPagingOfChat] = useState(1);
+    const [Images, setImages] = useState([]);
+    const onDrop = useCallback((acceptedFiles) => {
+        const array = Images;
+        array.push(acceptedFiles);
+        setImages(array);
+        console.log(array);
+    }, []);
+    const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
+    const s = getRootProps();
+    s.onClick = null;
+    s.onBlur = null;
     const sendMessageHandle = async (event) => {
         if (event.keyCode === 13 && event.target.value !== '') {
             const data = { targetId: currentChannel._id, targetType: 'channel', message: event.target.value };
@@ -168,19 +180,60 @@ function ChatArena() {
                         );
                     })}
                 </div>
-                <div className={cx('search-container')}>
+                {Images && (
+                    <div
+                        style={{
+                            height: '230px',
+                            position: 'absolute',
+                            top: '55%',
+                            width: '700px',
+                            backgroundColor: '#383A40',
+                            marginLeft: '25px',
+                            display: 'flex',
+                        }}
+                    >
+                        {Images.map((data) => {
+                            return (
+                                <div
+                                    style={{
+                                        backgroundColor: '#2b2d31',
+                                        margin: 20,
+                                        width: '200px',
+                                        marginRight: 10,
+                                        borderRadius: 10,
+                                        position: 'relative',
+                                    }}
+                                >
+                                    <Button sx={{ position: 'absolute', left: '150px' }} color="error">
+                                        <DeleteIcon />
+                                    </Button>
+                                    <img
+                                        style={{ height: '150px', width: '200px' }}
+                                        src={URL.createObjectURL(data[0])}
+                                        alt=" "
+                                    ></img>
+                                    <p style={{ color: 'white', fontSize: 12 }}>{data[0].name}</p>
+                                </div>
+                            );
+                        })}
+                    </div>
+                )}
+                <div className={cx('chat-container')}>
                     <Search className={cx('chat-bar')}>
                         <div className={cx('text-box')}>
                             <SearchIconWrapper>
                                 <AddCircleIcon />
                             </SearchIconWrapper>
-                            <StyledInputBase
-                                placeholder="Message #Chung"
-                                onKeyDown={sendMessageHandle}
-                                value={Message}
-                                onChange={(e) => setMessage(e.target.value)}
-                                inputProps={{ 'aria-label': 'search' }}
-                            />
+
+                            <div {...s}>
+                                <StyledInputBase
+                                    placeholder="Message #Chung"
+                                    onKeyDown={sendMessageHandle}
+                                    value={Message}
+                                    onChange={(e) => setMessage(e.target.value)}
+                                    inputProps={{ 'aria-label': 'search' }}
+                                ></StyledInputBase>
+                            </div>
                         </div>
                         <div className={cx('option')}>
                             <SearchIconWrapper>
