@@ -77,7 +77,6 @@ function ChatArena() {
         const array = Images;
         array.push(acceptedFiles);
         setImages(array);
-        console.log(array);
     }, []);
     const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
     const s = getRootProps();
@@ -85,9 +84,16 @@ function ChatArena() {
     s.onBlur = null;
     const sendMessageHandle = async (event) => {
         if (event.keyCode === 13 && event.target.value !== '') {
-            const data = { targetId: currentChannel._id, targetType: 'channel', message: event.target.value };
-            const actionResult = await dispatch(sendMessage(data));
+            const formData = new FormData();
+            formData.append('targetId', currentChannel._id);
+            formData.append('targetType', 'channel');
+            formData.append('message', event.target.value);
+            Images.forEach((element) => {
+                formData.append('files', element[0], element[0].name);
+            });
+            const actionResult = await dispatch(sendMessage(formData));
             setMessage('');
+            setImages([]);
             console.log(actionResult);
             socket.emit('newMessage', {
                 ...actionResult.meta.arg,
@@ -137,6 +143,7 @@ function ChatArena() {
             }
         });
     });
+    console.log(Images);
     return (
         <div className={cx('chat-arena')}>
             <div className={cx('message-container')}>
@@ -151,6 +158,19 @@ function ChatArena() {
                                         <p className={cx('time')}>{calculateTimePassed(data.User[0].createdAt)}</p>
                                     </div>
                                     <div className={cx('message')}>{data.message}</div>
+                                    {data.source.length > 0 && (
+                                        <div style={{ display: 'flex', width: '400px' }}>
+                                            {data.source.map((img) => {
+                                                return (
+                                                    <img
+                                                        src={img.data}
+                                                        style={{ height: '80%', width: '80%' }}
+                                                        alt="img"
+                                                    ></img>
+                                                );
+                                            })}
+                                        </div>
+                                    )}
                                 </div>
                             </div>
                         ) : index === 0 ? (
@@ -163,6 +183,19 @@ function ChatArena() {
                                             <p className={cx('time')}>{calculateTimePassed(data.User[0].createdAt)}</p>
                                         </div>
                                         <div className={cx('message')}>{data.message}</div>
+                                        {data.source.length > 0 && (
+                                            <div style={{ display: 'flex', width: '400px' }}>
+                                                {data.source.map((img) => {
+                                                    return (
+                                                        <img
+                                                            src={img.data}
+                                                            style={{ height: '80%', width: '80%' }}
+                                                            alt="img"
+                                                        ></img>
+                                                    );
+                                                })}
+                                            </div>
+                                        )}
                                     </div>
                                 </div>
                             </InView>
@@ -175,12 +208,25 @@ function ChatArena() {
                                         <p className={cx('time')}>{calculateTimePassed(data.User[0].createdAt)}</p>
                                     </div>
                                     <div className={cx('message')}>{data.message}</div>
+                                    {data.source.length > 0 && (
+                                        <div style={{ display: 'flex', width: '400px' }}>
+                                            {data.source.map((img) => {
+                                                return (
+                                                    <img
+                                                        src={img.data}
+                                                        style={{ height: '80%', width: '80%' }}
+                                                        alt="img"
+                                                    ></img>
+                                                );
+                                            })}
+                                        </div>
+                                    )}
                                 </div>
                             </div>
                         );
                     })}
                 </div>
-                {Images && (
+                {Images.length !== 0 && (
                     <div
                         style={{
                             height: '230px',
@@ -204,7 +250,15 @@ function ChatArena() {
                                         position: 'relative',
                                     }}
                                 >
-                                    <Button sx={{ position: 'absolute', left: '150px' }} color="error">
+                                    <Button
+                                        sx={{ position: 'absolute', left: '150px' }}
+                                        onClick={() => {
+                                            const array = Images;
+                                            const temp = array.filter((img) => img[0] !== data[0]);
+                                            setImages(temp);
+                                        }}
+                                        color="error"
+                                    >
                                         <DeleteIcon />
                                     </Button>
                                     <img

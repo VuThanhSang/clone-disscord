@@ -13,7 +13,9 @@ export const getChannelMessage = async (params) => {
 
 export const sendMessage = async (data) => {
     try {
-        const res = await httpRequest.post('message/sendMessage', { ...data });
+        const res = await httpRequest.post('message/sendMessage', data, {
+            'Content-Type': 'multipart/form-data',
+        });
         return res;
     } catch (error) {
         console.log(error);
