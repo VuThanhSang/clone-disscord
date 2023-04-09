@@ -18,7 +18,7 @@ const messageCollectionSchema = Joi.object({
   }),
   isReply: Joi.boolean().default(false),
   isDestroy: Joi.boolean().default(false),
-  createdAt: Joi.date().timestamp().default(Date.now()),
+  createdAt: Joi.string().default(""),
   updatedAt: Joi.date().timestamp().default(Date.now()),
 });
 
@@ -41,6 +41,7 @@ const findOneById = async (id) => {
 const sendMessage = async (data) => {
   try {
     const validatedValue = await validateSchema(data);
+    // console.log(validatedValue);
     const result = await getDB()
       .collection(messageCollectionName)
       .insertOne(validatedValue);

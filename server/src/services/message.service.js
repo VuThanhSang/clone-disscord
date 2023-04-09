@@ -1,3 +1,4 @@
+const { Timestamp } = require("mongodb");
 const messageModel = require("../models/message.model");
 require("dotenv");
 const cloudinary = require("cloudinary").v2;
@@ -10,7 +11,12 @@ const sendMessage = async (req) => {
         filename: data.filename,
       };
     });
-    const addData = { ...req.body, source, sourceId: req.user.sub };
+    const addData = {
+      ...req.body,
+      source,
+      sourceId: req.user.sub,
+      createdAt: Date.now().toString(),
+    };
     const result = await messageModel.sendMessage(addData);
     return result;
   } catch (error) {
