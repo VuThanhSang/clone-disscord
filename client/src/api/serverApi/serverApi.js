@@ -19,6 +19,7 @@ export const deleteServer = async (data) => {
 export const getListServer = async () => {
     try {
         const res = await httpRequest.get('user/listServerOfUser');
+        console.log(res);
         return res;
     } catch (error) {
         console.log(error);

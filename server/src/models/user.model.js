@@ -9,7 +9,7 @@ const userCollectionName = "Users";
 const userCollectionSchema = Joi.object({
   username: Joi.string().max(50).default(null),
   password: Joi.string().min(5).max(30).trim().default(null),
-  createdAt: Joi.date().timestamp().default(Date.now()),
+  createdAt: Joi.string().default(""),
   updatedAt: Joi.date().timestamp().default(null),
   email: Joi.string().required().email(),
   mobile: Joi.string().default(null),
@@ -123,12 +123,26 @@ const listServerOfUser = async (userId) => {
             ownerId: { $first: "$ownerId" },
             member: { $first: "$member" },
             channel: { $push: "$Channels" },
+            createdAt: { $first: "$createdAt" },
           },
         },
       ])
+      .sort({ createdAt: 1 })
       .toArray();
+    const currentChannel = await getCurrentChannel(userId);
 
-    return servers;
+    return { server: servers, currentChannel: currentChannel };
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+const getCurrentChannel = async (id) => {
+  try {
+    const result = await getDB()
+      .collection("Channel")
+      .aggregate([{ $match: { inChat: { $in: [id] } } }])
+      .toArray();
+    return result;
   } catch (error) {
     throw new Error(error);
   }

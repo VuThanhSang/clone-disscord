@@ -51,6 +51,9 @@ export const serverSlice = createSlice({
         changeChannel: (state, action) => {
             state.currentChannel = action.payload;
         },
+        changeServer: (state, action) => {
+            state.currentServer = action.payload;
+        },
     },
     extraReducers: (builder) => {
         builder.addCase(getListServer.pending, (state, action) => {
@@ -63,9 +66,17 @@ export const serverSlice = createSlice({
         builder.addCase(getListServer.fulfilled, (state, action) => {
             state.loading = false;
             state.error = '';
-            state.server = action.payload?.result;
-            state.currentServer = action.payload?.result[0];
-            state.currentChannel = state.currentServer?.channel[0][0];
+            state.server = action.payload?.result.server;
+            if (action.payload?.result.currentChannel[0] !== null) {
+                state.currentServer = state.server[0];
+                state.currentChannel = state.currentServer.channel[0][0];
+            } else {
+                const currentServer = state.server?.find(
+                    (data) => data._id === action.payload?.result.currentChannel[0].serverId,
+                );
+                state.currentServer = currentServer;
+                state.currentChannel = action.payload?.result.currentChannel[0];
+            }
         });
 
         builder.addCase(createServer.pending, (state, action) => {
@@ -148,5 +159,5 @@ export const serverSlice = createSlice({
         });
     },
 });
-export const { clearServer, changeChannel } = serverSlice.actions;
+export const { clearServer, changeChannel, changeServer } = serverSlice.actions;
 export default serverSlice.reducer;

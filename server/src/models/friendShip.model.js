@@ -10,7 +10,7 @@ const friendShipCollectionSchema = Joi.object({
   type: Joi.string().required(),
   status: Joi.boolean().required(),
   notes: Joi.string().default(null),
-  createdAt: Joi.date().timestamp().default(Date.now()),
+  createdAt: Joi.string().default(""),
   updatedAt: Joi.date().timestamp().default(null),
 });
 const validateSchema = async (data) => {
