@@ -3,7 +3,7 @@ import { Avatar, Box, Button, InputBase, Modal, Tooltip } from '@mui/material';
 import classNames from 'classnames/bind';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { getListServer } from '~/features/server/serverSlice';
+import { changeChannel, changeServer, getListServer } from '~/features/server/serverSlice';
 import styles from './Sidebar.module.scss';
 import CreateServer from './CreateServer';
 
@@ -12,10 +12,15 @@ const cx = classNames.bind(styles);
 function Sidebar() {
     const { server, loading } = useSelector((state) => state.servers);
     const [openModalAddServer, setOpenModalAddServer] = useState(false);
+    const dispatch = useDispatch();
+
     const handleOpenModalAddServer = () => {
         setOpenModalAddServer(true);
     };
-    const handleCloseModalAddServer = () => setOpenModalAddServer(false);
+    const handleCloseModalAddServer = () => {
+        setOpenModalAddServer(false);
+        dispatch(getListServer());
+    };
     return (
         <div className={cx('wrapper')}>
             <div className={cx('box')}>
@@ -34,6 +39,10 @@ function Sidebar() {
                                 sx={{ width: 45, height: 45 }}
                                 src="https://static.vecteezy.com/system/resources/thumbnails/006/892/625/small/discord-logo-icon-editorial-free-vector.jpg"
                                 alt="none"
+                                onClick={(e) => {
+                                    dispatch(changeServer(data));
+                                    dispatch(changeChannel(data.channel[0][0]));
+                                }}
                             />
                         </Tooltip>
                     </div>

@@ -9,7 +9,7 @@ const channelCollectionSchema = Joi.object({
   serverId: Joi.string().required(),
   type: Joi.string().required(),
   inChat: Joi.array().items(Joi.string()).default([]),
-  createdAt: Joi.date().timestamp().default(Date.now()),
+  createdAt: Joi.string().default(""),
   updatedAt: Joi.date().timestamp().default(null),
 });
 const validateSchema = async (data) => {

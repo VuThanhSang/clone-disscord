@@ -10,7 +10,7 @@ const serverCollectionSchema = Joi.object({
   channelOrder: Joi.array().items(Joi.string()).default([]),
   ownerId: Joi.string().required(),
   image: Joi.string().default(null),
-  createdAt: Joi.date().timestamp().default(Date.now()),
+  createdAt: Joi.string().default(""),
   updatedAt: Joi.date().timestamp().default(Date.now()),
 });
 

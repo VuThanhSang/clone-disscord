@@ -40,7 +40,6 @@ function CreateServer({ params, callback }) {
     const dispatch = useDispatch();
     const createServerHandle = () => {
         dispatch(createServer(serverName));
-        dispatch(getListServer());
         callback();
     };
     return (

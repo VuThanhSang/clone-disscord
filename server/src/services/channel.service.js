@@ -2,7 +2,10 @@ const channelModel = require("../models/channel.model");
 
 const create = async (data) => {
   try {
-    const result = await channelModel.create(data);
+    const result = await channelModel.create({
+      ...data,
+      createdAt: Date.now().toString(),
+    });
     return result;
   } catch (error) {
     throw new Error(error);

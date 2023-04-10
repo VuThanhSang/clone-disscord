@@ -2,7 +2,12 @@ const serverModel = require("../models/server.model");
 
 const create = async (ownerId, data) => {
   try {
-    const addValue = { ...data, ownerId: ownerId, member: [ownerId] };
+    const addValue = {
+      ...data,
+      ownerId: ownerId,
+      member: [ownerId],
+      createdAt: Date.now().toString(),
+    };
     const result = await serverModel.create(addValue);
     return result;
   } catch (error) {

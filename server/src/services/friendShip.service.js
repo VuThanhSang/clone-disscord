@@ -2,7 +2,10 @@ const friendShipModel = require("../models/friendShip.model");
 
 const addFriend = async (data) => {
   try {
-    const result = await friendShipModel.addFriend(data);
+    const result = await friendShipModel.addFriend({
+      ...data,
+      createdAt: Date.now().toString(),
+    });
     return result;
   } catch (error) {
     throw new Error(error);
