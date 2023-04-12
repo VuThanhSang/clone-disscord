@@ -1,6 +1,6 @@
-import { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { config, useClient, useMicrophoneAndCameraTracks, channelName } from '~/utils/agoraSetting';
-import { Grid } from '@mui/material';
+import { Button, Divider, Drawer, Grid, Stack } from '@mui/material';
 import Controls from './Controls';
 import Videos from './Videos';
 import { useDispatch, useSelector } from 'react-redux';
@@ -10,6 +10,7 @@ import InboxIcon from '@mui/icons-material/Inbox';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import ChatBubbleIcon from '@mui/icons-material/ChatBubble';
 import ViewComfyIcon from '@mui/icons-material/ViewComfy';
+import CloseIcon from '@mui/icons-material/Close';
 function VoiceChat(props) {
     const { currentChannel } = useSelector((state) => state.servers);
     const [users, setUsers] = useState([]);
@@ -17,7 +18,7 @@ function VoiceChat(props) {
     const client = useClient();
     const { ready, tracks } = useMicrophoneAndCameraTracks();
     const [track, setTrack] = useState({ video: true, audio: true });
-
+    const [OpenChat, setOpenChat] = useState(false);
     const dispatch = useDispatch();
     useEffect(() => {
         // console.log(users);
@@ -83,7 +84,10 @@ function VoiceChat(props) {
                     <ViewComfyIcon style={{ color: 'white', marginLeft: 3, cursor: 'pointer' }} />
                     <InboxIcon style={{ color: 'white', marginLeft: 20, cursor: 'pointer' }} />
                     <MoreHorizIcon style={{ color: 'white', marginLeft: 20, cursor: 'pointer' }} />
-                    <ChatBubbleIcon style={{ color: 'white', marginLeft: 20, cursor: 'pointer' }} />
+                    <ChatBubbleIcon
+                        onClick={() => setOpenChat(!OpenChat)}
+                        style={{ color: 'white', marginLeft: 20, cursor: 'pointer' }}
+                    />
                 </div>
             </Grid>
             <Grid item sx={{ height: '85%' }}>
@@ -92,6 +96,31 @@ function VoiceChat(props) {
             <Grid item sx={{ height: '10%' }}>
                 {ready && tracks && <Controls tracks={tracks} setStart={setStart} track={track} setTrack={setTrack} />}
             </Grid>
+
+            <React.Fragment>
+                <Drawer anchor="right" open={OpenChat} onClose={() => setOpenChat(!OpenChat)}>
+                    <Stack
+                        direction="column"
+                        sx={{ width: '450px', height: '100%', backgroundColor: '#313338', color: 'white' }}
+                    >
+                        <Stack
+                            direction="row"
+                            alignItems="center"
+                            justifyContent="space-between"
+                            sx={{ fontSize: 16, height: '10%' }}
+                        >
+                            <Stack direction="row" sx={{ padding: 2, alignItems: 'center' }}>
+                                <ChatBubbleIcon sx={{ marginRight: 2 }}></ChatBubbleIcon>
+                                <p>{currentChannel.name}</p>
+                            </Stack>
+                            <CloseIcon sx={{ marginRight: 2 }}></CloseIcon>
+                        </Stack>
+                        <Divider></Divider>
+                        <Stack sx={{ height: '80%' }}>chat</Stack>
+                        <Stack sx={{ height: '10%%' }}>khung chat</Stack>
+                    </Stack>
+                </Drawer>
+            </React.Fragment>
         </Grid>
     );
 }
