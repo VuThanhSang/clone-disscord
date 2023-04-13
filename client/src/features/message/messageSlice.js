@@ -52,10 +52,11 @@ export const messageSlice = createSlice({
         });
         builder.addCase(scrollMessage.fulfilled, (state, action) => {
             if (
-                !(JSON.stringify(state.data) == JSON.stringify(action.payload?.result.data.reverse())) &&
+                !(JSON.stringify(state.data) === JSON.stringify(action.payload?.result.data.reverse())) &&
                 action.payload?.result.data.length !== 0
             ) {
-                state.data = action.payload?.result.data.reverse().concat(state.data);
+                console.log(action.payload?.result.data);
+                state.data = action.payload?.result.data.concat(state.data);
             }
             state.loading = false;
             state.error = '';

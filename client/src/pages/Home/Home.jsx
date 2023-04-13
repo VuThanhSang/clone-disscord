@@ -1,8 +1,8 @@
 import classNames from 'classnames/bind';
 import styles from './Home.module.scss';
-import Header from './Header';
+import Header from '~/Layout/Components/Home/Header';
 import ChatArena from './ChatArena/ChatArena';
-import MemberList from './MemberList';
+import MemberList from '../../Layout/Components/Home/MemberList';
 import { useDispatch, useSelector } from 'react-redux';
 import { getUserInfo } from '~/features/auth/authSlice';
 import { useEffect } from 'react';

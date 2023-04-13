@@ -10,7 +10,7 @@ export const calculateTimePassed = (time) => {
         minute: 60 * 1000,
     };
 
-    const diff = Date.now() - time;
+    const diff = Date.now() - Number(time);
     for (const key in unit) {
         if (diff > unit[key]) {
             const value = unit[key];
