@@ -1,0 +1,33 @@
+.chat-container {
+    position: relative;
+    width: 95%;
+    height: 60px;
+    background-color: rgb(49, 51, 56);
+    bottom: 0;
+    align-items: flex-start;
+    justify-content: center;
+}
+.chat-bar {
+    width: 95%;
+    height: 70%;
+    // height: auto;
+    border-radius: 10px;
+    background-color: rgb(64, 68, 75);
+
+    color: rgb(220, 221, 222);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    .text-box {
+        position: relative;
+        display: flex;
+        width: 70%;
+        height: auto;
+    }
+    .option {
+        .icon {
+            font-size: 27px;
+            cursor: pointer;
+        }
+    }
+}

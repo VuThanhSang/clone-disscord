@@ -1,8 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { config, useClient, useMicrophoneAndCameraTracks, channelName } from '~/utils/agoraSetting';
 import { Button, Divider, Drawer, Grid, Stack } from '@mui/material';
-import Controls from './Controls';
-import Videos from './Videos';
+import Controls from '../../../Layout/Components/Home/VoiceChat/Controls';
+import Videos from '../../../Layout/Components/Home/VoiceChat/Videos';
 import { useDispatch, useSelector } from 'react-redux';
 import { joinChannel } from '~/features/server/serverSlice';
 import VolumeUpIcon from '@mui/icons-material/VolumeUp';
@@ -11,6 +11,7 @@ import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import ChatBubbleIcon from '@mui/icons-material/ChatBubble';
 import ViewComfyIcon from '@mui/icons-material/ViewComfy';
 import CloseIcon from '@mui/icons-material/Close';
+import Chat from '~/Layout/Components/Home/VoiceChat/Chat/Chat';
 function VoiceChat(props) {
     const { currentChannel } = useSelector((state) => state.servers);
     const [users, setUsers] = useState([]);
@@ -97,30 +98,7 @@ function VoiceChat(props) {
                 {ready && tracks && <Controls tracks={tracks} setStart={setStart} track={track} setTrack={setTrack} />}
             </Grid>
 
-            <React.Fragment>
-                <Drawer anchor="right" open={OpenChat} onClose={() => setOpenChat(!OpenChat)}>
-                    <Stack
-                        direction="column"
-                        sx={{ width: '450px', height: '100%', backgroundColor: '#313338', color: 'white' }}
-                    >
-                        <Stack
-                            direction="row"
-                            alignItems="center"
-                            justifyContent="space-between"
-                            sx={{ fontSize: 16, height: '10%' }}
-                        >
-                            <Stack direction="row" sx={{ padding: 2, alignItems: 'center' }}>
-                                <ChatBubbleIcon sx={{ marginRight: 2 }}></ChatBubbleIcon>
-                                <p>{currentChannel.name}</p>
-                            </Stack>
-                            <CloseIcon sx={{ marginRight: 2 }}></CloseIcon>
-                        </Stack>
-                        <Divider></Divider>
-                        <Stack sx={{ height: '80%' }}>chat</Stack>
-                        <Stack sx={{ height: '10%%' }}>khung chat</Stack>
-                    </Stack>
-                </Drawer>
-            </React.Fragment>
+            <Chat OpenChat={OpenChat} setOpenChat={setOpenChat}></Chat>
         </Grid>
     );
 }
