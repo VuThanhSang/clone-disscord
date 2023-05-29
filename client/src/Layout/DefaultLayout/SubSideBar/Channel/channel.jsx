@@ -22,6 +22,7 @@ import PersonAddAlt1Icon from '@mui/icons-material/PersonAddAlt1';
 import CreateChannel from '../CreateChannel';
 import { changeChannel, getListServer } from '~/features/server/serverSlice';
 import ChannelSetting from '~/pages/ChannelSetting';
+import { getChannelMessage } from '~/features/message/messageSlice';
 const cx = classNames.bind(styles);
 function Channel() {
     const { currentUser, loading } = useSelector((state) => state.auth);
@@ -107,6 +108,9 @@ function Channel() {
                                             sx={{ pl: 4, cursor: 'pointer' }}
                                             onClick={() => {
                                                 dispatch(changeChannel(data[0]));
+                                                dispatch(
+                                                    getChannelMessage({ currentChannel: data[0]?._id, paging: 1 }),
+                                                );
                                             }}
                                         >
                                             <TagIcon sx={{ color: 'rgb(150,152,157)', fontSize: 25 }} />

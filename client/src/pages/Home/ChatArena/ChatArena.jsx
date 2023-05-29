@@ -2,13 +2,14 @@ import classNames from 'classnames/bind';
 
 import styles from './ChatArena.module.scss';
 import MemberList from '../../../Layout/Components/Home/MemberList';
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import io from 'socket.io-client';
 import ChatBar from '~/Layout/Components/Home/Chat/ChatBar';
 import MessageBox from '~/Layout/Components/Home/Chat/MessageBox/MessageBox';
 import { useDispatch, useSelector } from 'react-redux';
 import { joinChannel } from '~/features/server/serverSlice';
 import { getChannelMessage } from '~/features/message/messageSlice';
+import { useSocket } from '~/utils/socketProvider';
 const ENDPOINT = 'http://localhost:3240';
 var socket, seletedChatCompare;
 const cx = classNames.bind(styles);
@@ -19,31 +20,30 @@ function ChatArena() {
     const dispatch = useDispatch();
     const { currentUser } = useSelector((state) => state.auth);
     const { currentChannel } = useSelector((state) => state.servers);
-    const [SocketConnected, setSocketConnected] = useState(false);
-    useEffect(() => {
-        socket = io(ENDPOINT);
-        socket.emit('setup', currentUser.data);
-        socket.on('connection', () => {
-            setSocketConnected(true);
-        });
-    }, []);
+    socket = useSocket();
+    // useEffect(() => {
+    //     socket.emit('setup', currentUser.data);
+    //     socket.on('connection', () => {
+    //         setSocketConnected(true);
+    //     });
+    // }, []);
     //update while change channel
     useEffect(() => {
         dispatch(joinChannel(currentChannel?._id));
-        dispatch(getChannelMessage({ currentChannel: currentChannel?._id, paging: 1 }));
-        socket.emit('joinChat', currentChannel?._id);
+        socket.emit('room:join', { user: currentUser.data, channel: currentChannel });
     }, [currentChannel]);
     useEffect(() => {
         if (PagingOfChat === 1) {
             divRef.current?.scrollIntoView({ behavior: 'smooth' });
         }
-        socket.on('message Received', (newMessageReceived) => {
-            if (currentChannel?._id !== newMessageReceived.targetId) {
-            } else {
-                dispatch(getChannelMessage({ currentChannel: currentChannel?._id, paging: 1 }));
-            }
+        socket.on('user:joined', (data) => {
+            console.log('user Joined', data);
         });
-    });
+    }, [socket]);
+    useEffect(() => {
+        dispatch(getChannelMessage({ currentChannel: currentChannel?._id, paging: 1 }));
+        console.log('goi');
+    }, []);
     return (
         <div className={cx('chat-arena')}>
             <div className={cx('message-container')}>

@@ -1,6 +1,5 @@
 import { AgoraVideoPlayer } from 'agora-rtc-react';
 import { useEffect, useRef, useState } from 'react';
-import { config, useClient, useMicrophoneAndCameraTracks, channelName } from '~/utils/agoraSetting';
 import { Avatar, Button, Grid } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { getUserInChat } from '~/features/server/serverSlice';
@@ -11,7 +10,7 @@ function Videos(props) {
     const { users, tracks, track } = props;
     const [gridSpacing, setGridSpacing] = useState(6);
     const [userInChat, setUserInChat] = useState([]);
-
+    let arr = users.filter((data) => data[0]._id !== currentUser.data._id);
     useEffect(() => {
         if (users.length <= 1) {
             setGridSpacing(12);
@@ -67,7 +66,7 @@ function Videos(props) {
                 </Grid>
             )}
             {users.length > 0
-                ? users.map((user) => {
+                ? arr.map((user) => {
                       if (user.videoTrack) {
                           return (
                               <Grid item xs={gridSpacing}>
@@ -81,33 +80,35 @@ function Videos(props) {
                       } else return null;
                   })
                 : inChat.map((data) => {
-                      return (
-                          <Grid item xs={gridSpacing}>
-                              <div
-                                  style={{
-                                      height: '200px',
-                                      width: '100%',
-                                      backgroundColor: 'lightblue',
-                                      display: 'flex',
-                                      justifyContent: 'center',
-                                      alignItems: 'center',
-                                      position: 'relative',
-                                  }}
-                              >
-                                  <Avatar src={data[0]?.avatar?.data} alt="gege" sx={{ width: 100, height: 100 }} />
-                                  <p
+                      if (data[0]._id !== currentUser.data._id) {
+                          return (
+                              <Grid item xs={gridSpacing}>
+                                  <div
                                       style={{
-                                          position: 'absolute',
-                                          bottom: 10,
-                                          left: 5,
-                                          fontSize: 12,
+                                          height: '200px',
+                                          width: '100%',
+                                          backgroundColor: 'lightblue',
+                                          display: 'flex',
+                                          justifyContent: 'center',
+                                          alignItems: 'center',
+                                          position: 'relative',
                                       }}
                                   >
-                                      {data[0]?.username}
-                                  </p>
-                              </div>
-                          </Grid>
-                      );
+                                      <Avatar src={data[0]?.avatar?.data} alt="gege" sx={{ width: 100, height: 100 }} />
+                                      <p
+                                          style={{
+                                              position: 'absolute',
+                                              bottom: 10,
+                                              left: 5,
+                                              fontSize: 12,
+                                          }}
+                                      >
+                                          {data[0]?.username}
+                                      </p>
+                                  </div>
+                              </Grid>
+                          );
+                      } else return null;
                   })}
         </Grid>
     );

@@ -87,7 +87,6 @@ function ChatBar(props) {
                 senderId: currentUser.data?._id,
                 inChat: currentChannel.inChat,
             });
-            dispatch(getChannelMessage({ currentChannel: currentChannel?._id, paging: 1 }));
             divRef.current?.scrollIntoView({ behavior: 'smooth' });
         }
     };
