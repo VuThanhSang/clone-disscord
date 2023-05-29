@@ -28,6 +28,10 @@ export const messageSlice = createSlice({
             state.loading = false;
             state.error = '';
         },
+        getNewMessage: (state, action) => {
+            state.data.push(action.payload);
+            console.log(state.data);
+        },
     },
     extraReducers: (builder) => {
         builder.addCase(getChannelMessage.pending, (state, action) => {
@@ -69,11 +73,10 @@ export const messageSlice = createSlice({
             state.error = action.error;
         });
         builder.addCase(sendMessage.fulfilled, (state, action) => {
-            console.log(action.payload);
             state.loading = false;
             state.error = '';
         });
     },
 });
-export const { clearMessage } = messageSlice.actions;
+export const { clearMessage, getNewMessage } = messageSlice.actions;
 export default messageSlice.reducer;

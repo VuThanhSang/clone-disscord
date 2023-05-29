@@ -52,24 +52,15 @@ const bootServer = () => {
     },
   });
   io.on("connection", (socket) => {
-    console.log("connected to socket.io");
+    console.log("connected to socket.io", socket.id);
 
-    socket.on("setup", (userData) => {
-      socket.join(userData._id);
-      socket.emit("connected");
+    socket.on("room:join", (data) => {
+      const { user, channel } = data;
+      io.to(channel?._id).emit("user:joined", { user: user, id: socket.id });
+      socket.join(channel?._id);
     });
-    socket.on("joinChat", (room) => {
-      socket.join(room);
-      console.log("User join room :" + room);
-    });
-    socket.on("newMessage", (newMessageReceived) => {
-      var inChat = newMessageReceived.inChat;
-      if (!inChat) return console.log("chat.user not define");
-      inChat.forEach((user) => {
-        if (user == newMessageReceived.senderId) return;
-        socket.in(user).emit("message Received", newMessageReceived);
-      });
-      console.log("newMessageReceived", newMessageReceived);
+    socket.on("newMessage", (data) => {
+      io.to(data.channel?._id).emit("message Received", data);
     });
   });
 };

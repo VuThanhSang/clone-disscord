@@ -8,6 +8,7 @@ import ChatBar from './ChatBar';
 import { joinChannel } from '~/features/server/serverSlice';
 import { getChannelMessage } from '~/features/message/messageSlice';
 import MessageBox from '../../Chat/MessageBox/MessageBox';
+import { useSocket } from '~/utils/socketProvider';
 const ENDPOINT = 'http://localhost:3240';
 var socket, seletedChatCompare;
 function Chat(props) {
@@ -18,29 +19,18 @@ function Chat(props) {
     const dispatch = useDispatch();
     const { currentUser } = useSelector((state) => state.auth);
     const [SocketConnected, setSocketConnected] = useState(false);
-    useEffect(() => {
-        socket = io(ENDPOINT);
-        socket.emit('setup', currentUser.data);
-        socket.on('connection', () => {
-            setSocketConnected(true);
-        });
-    }, []);
+    socket = useSocket();
+
     //update while change channel
-    useEffect(() => {
-        dispatch(joinChannel(currentChannel?._id));
-        dispatch(getChannelMessage({ currentChannel: currentChannel?._id, paging: 1 }));
-        socket.emit('joinChat', currentChannel?._id);
-    }, [currentChannel]);
+    // useEffect(() => {
+    //     dispatch(joinChannel(currentChannel?._id));
+    //     dispatch(getChannelMessage({ currentChannel: currentChannel?._id, paging: 1 }));
+    //     socket.emit('room:join', { user: currentUser.data, channel: currentChannel });
+    // }, [currentChannel]);
     useEffect(() => {
         if (PagingOfChat === 1) {
             divRef.current?.scrollIntoView({ behavior: 'smooth' });
         }
-        socket.on('message Received', (newMessageReceived) => {
-            if (currentChannel?._id !== newMessageReceived.targetId) {
-            } else {
-                dispatch(getChannelMessage({ currentChannel: currentChannel?._id, paging: 1 }));
-            }
-        });
     });
     return (
         <React.Fragment>

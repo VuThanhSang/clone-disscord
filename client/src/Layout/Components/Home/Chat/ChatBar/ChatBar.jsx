@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { useDispatch, useSelector } from 'react-redux';
-import { getChannelMessage, sendMessage } from '~/features/message/messageSlice';
+import { getChannelMessage, getNewMessage, sendMessage } from '~/features/message/messageSlice';
 import EmojiEmotionsIcon from '@mui/icons-material/EmojiEmotions';
 import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
 import GifBoxIcon from '@mui/icons-material/GifBox';
@@ -10,7 +10,6 @@ import classNames from 'classnames/bind';
 import styles from './ChatBar.module.scss';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { joinChannel } from '~/features/server/serverSlice';
 import { alpha, Button, Divider, InputBase, styled } from '@mui/material';
 
 const cx = classNames.bind(styles);
@@ -56,6 +55,8 @@ function ChatBar(props) {
     const { divRef, PagingOfChat, socket } = props;
     const { currentChannel } = useSelector((state) => state.servers);
     const { currentUser } = useSelector((state) => state.auth);
+    const messageData = useSelector((state) => state.message.data);
+
     const [Images, setImages] = useState([]);
     const [Message, setMessage] = useState('');
     const onDrop = useCallback((acceptedFiles) => {
@@ -83,14 +84,20 @@ function ChatBar(props) {
             setImages([]);
             console.log(actionResult);
             socket.emit('newMessage', {
-                ...actionResult.meta.arg,
-                senderId: currentUser.data?._id,
-                inChat: currentChannel.inChat,
+                newMessage: { ...actionResult.payload.result },
+                user: currentUser.data,
+                channel: currentChannel,
             });
-            dispatch(getChannelMessage({ currentChannel: currentChannel?._id, paging: 1 }));
-            divRef.current?.scrollIntoView({ behavior: 'smooth' });
         }
     };
+    useEffect(() => {
+        divRef.current?.scrollIntoView({ behavior: 'smooth' });
+    }, [messageData]);
+    useEffect(() => {
+        socket.on('message Received', (data) => {
+            dispatch(getNewMessage({ ...data.newMessage, User: [data.user] }));
+        });
+    }, [socket]);
     return (
         <div
             style={{

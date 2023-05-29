@@ -6,13 +6,16 @@ import GlobalStyles from '~/components/GlobalStyles';
 import { persistor, store } from './app/store';
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
+import { SocketProvider } from './utils/socketProvider';
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
     <Provider store={store}>
         <PersistGate loading={null} persistor={persistor}>
-            <GlobalStyles>
-                <App />
-            </GlobalStyles>
+            <SocketProvider>
+                <GlobalStyles>
+                    <App />
+                </GlobalStyles>
+            </SocketProvider>
         </PersistGate>
     </Provider>,
 );
