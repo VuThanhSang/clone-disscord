@@ -21,7 +21,7 @@ Vào thư mục server và cài đặt các dependency:
 ``` cd server && npm install ```
 
 Tạo một file .env trong thư mục server và điền các thông tin sau:
-
+```
 PORT=
 
 MONGODB_URI=''
@@ -51,8 +51,14 @@ CLOUDINARY_NAME=
 CLOUDINARY_KEY=
 
 CLOUDINARY_SECRET=
+```
+Tạo một file .env trong thư mục client và điền các thông tin sau:
+```
+REACT_APP_API_URL='http://localhost:3240/v1'
 
+PORT=3001
 
+```
 Copy
 
 Chạy server bằng lệnh: npm run dev 
