@@ -5,6 +5,41 @@
 - Back-End: Nodejs, ExpressJs
 - Database: MongoDB
 - Storage: Cloudinary
+## Cài đặt
+Để chạy project này, bạn cần cài đặt Nodejs và npm trên máy của bạn. Sau đó, bạn làm theo các bước sau:
+
+Clone project này từ github:``` git clone https://github.com/your-username/discord-clone.git ```
+Vào thư mục client và cài đặt các dependency: ``` cd client && npm install ```
+Vào thư mục server và cài đặt các dependency:``` cd server && npm install ```
+Tạo một file .env trong thư mục server và điền các thông tin sau:
+PORT=
+MONGODB_URI=''
+DATABASE_NAME = Clone-Disscord
+APP_HOST = localhost
+APP_PORT = 3240
+APP_CLIENT_PORT = 3001
+JWT_SECRET = UserAuthentication
+JWT_REFRESH= UserRefreshKey
+GOOGLE_CLIENT_ID= 
+GOOGLE_CLIENT_SECRET = 
+GITHUB_CLIENT_ID = 
+GITHUB_CLIENT_SECRET =
+CLOUDINARY_NAME=
+CLOUDINARY_KEY=
+CLOUDINARY_SECRET=
+Copy
+Chạy server bằng lệnh: npm run dev 
+Chạy client bằng lệnh: npm start
+Mở trình duyệt và truy cập vào địa chỉ: http://localhost:3001
+Chức năng
+Project này có các chức năng sau:
+
+Đăng ký và đăng nhập bằng email và mật khẩu
+Tạo và tham gia các server
+Tạo và xóa các channel trong server
+Chat với những người khác trong cùng channel
+Gửi hình ảnh và emoji trong chat
+Thay đổi avatar và tên hiển thị
 ## Giao diện 
 
 ![h1](https://github.com/VuThanhSang/clone-disscord/assets/87526822/0fb65b64-5019-4747-9acd-93c069393681)
