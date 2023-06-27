@@ -62,5 +62,15 @@ const bootServer = () => {
     socket.on("newMessage", (data) => {
       io.to(data.channel?._id).emit("message Received", data);
     });
+    socket.on("room:leave", function (room) {
+      try {
+        console.log(room);
+        socket.leave(room);
+        socket.to(room).emit("user left", socket.id);
+      } catch (e) {
+        console.log("[error]", "leave room :", e);
+        socket.emit("error", "couldnt perform requested action");
+      }
+    });
   });
 };

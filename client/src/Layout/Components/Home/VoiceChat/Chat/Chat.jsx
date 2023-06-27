@@ -28,13 +28,22 @@ function Chat(props) {
     //     socket.emit('room:join', { user: currentUser.data, channel: currentChannel });
     // }, [currentChannel]);
     useEffect(() => {
+        socket.emit('room:join', { user: currentUser.data, channel: currentChannel });
+    }, [currentChannel]);
+    useEffect(() => {
         if (PagingOfChat === 1) {
             divRef.current?.scrollIntoView({ behavior: 'smooth' });
         }
     });
     return (
         <React.Fragment>
-            <Drawer anchor="right" open={OpenChat} onClose={() => setOpenChat(!OpenChat)}>
+            <Drawer
+                anchor="right"
+                open={OpenChat}
+                onClose={() => {
+                    setOpenChat(!OpenChat);
+                }}
+            >
                 <Stack
                     direction="column"
                     sx={{ width: '450px', height: '100%', backgroundColor: '#313338', color: 'white' }}

@@ -21,6 +21,7 @@ function ChatArena() {
     const { currentUser } = useSelector((state) => state.auth);
     const { currentChannel } = useSelector((state) => state.servers);
     socket = useSocket();
+
     // useEffect(() => {
     //     socket.emit('setup', currentUser.data);
     //     socket.on('connection', () => {
@@ -42,7 +43,6 @@ function ChatArena() {
     }, [socket]);
     useEffect(() => {
         dispatch(getChannelMessage({ currentChannel: currentChannel?._id, paging: 1 }));
-        console.log('goi');
     }, []);
     return (
         <div className={cx('chat-arena')}>

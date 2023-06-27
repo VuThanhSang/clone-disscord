@@ -30,7 +30,6 @@ export const messageSlice = createSlice({
         },
         getNewMessage: (state, action) => {
             state.data.push(action.payload);
-            console.log(state.data);
         },
     },
     extraReducers: (builder) => {
