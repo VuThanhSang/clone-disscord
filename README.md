@@ -1,10 +1,10 @@
 # clone-disscord
 ## Công nghệ sử dụng
 
-Front-End: ReactJS
-Back-End: Nodejs, ExpressJs
-Database: MongoDB
-Storage: Cloudinary
+- Front-End: ReactJS
+- Back-End: Nodejs, ExpressJs
+- Database: MongoDB
+- Storage: Cloudinary
 ## Giao diện 
 
 ![h1](https://github.com/VuThanhSang/clone-disscord/assets/87526822/0fb65b64-5019-4747-9acd-93c069393681)
