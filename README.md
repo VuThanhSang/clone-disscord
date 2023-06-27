@@ -23,20 +23,35 @@ Vào thư mục server và cài đặt các dependency:
 Tạo một file .env trong thư mục server và điền các thông tin sau:
 
 PORT=
+
 MONGODB_URI=''
+
 DATABASE_NAME = Clone-Disscord
+
 APP_HOST = localhost
+
 APP_PORT = 3240
+
 APP_CLIENT_PORT = 3001
+
 JWT_SECRET = UserAuthentication
+
 JWT_REFRESH= UserRefreshKey
+
 GOOGLE_CLIENT_ID= 
+
 GOOGLE_CLIENT_SECRET = 
+
 GITHUB_CLIENT_ID = 
+
 GITHUB_CLIENT_SECRET =
+
 CLOUDINARY_NAME=
+
 CLOUDINARY_KEY=
+
 CLOUDINARY_SECRET=
+
 
 Copy
 
@@ -50,17 +65,17 @@ Chức năng
 
 Project này có các chức năng sau:
 
-Đăng ký và đăng nhập bằng email và mật khẩu
+- Đăng ký và đăng nhập bằng email và mật khẩu
 
-Tạo và tham gia các server
+- Tạo và tham gia các server
 
-Tạo và xóa các channel trong server
+- Tạo và xóa các channel trong server
 
-Chat với những người khác trong cùng channel
+- Chat với những người khác trong cùng channel
 
-Gửi hình ảnh và emoji trong chat
+- Gửi hình ảnh và emoji trong chat
 
-Thay đổi avatar và tên hiển thị
+- Thay đổi avatar và tên hiển thị
 
 ## Giao diện 
 
