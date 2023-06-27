@@ -23,17 +23,19 @@ import CreateChannel from '../CreateChannel';
 import { changeChannel, getListServer } from '~/features/server/serverSlice';
 import ChannelSetting from '~/pages/ChannelSetting';
 import { getChannelMessage } from '~/features/message/messageSlice';
+import { useSocket } from '~/utils/socketProvider';
 const cx = classNames.bind(styles);
 function Channel() {
     const { currentUser, loading } = useSelector((state) => state.auth);
     const { currentServer } = useSelector((state) => state.servers);
+    const { currentChannel } = useSelector((state) => state.servers);
 
     const [openModalAddChannel, setOpenModalAddChannel] = useState(false);
     const handleOpenModalAddChannel = () => {
         setOpenModalAddChannel(true);
     };
     const handleCloseModalAddChannel = () => setOpenModalAddChannel(false);
-
+    const socket = useSocket();
     const [modalChannelSetting, setModalChannelSetting] = useState(false);
     const handleOpenChannelSetting = () => setModalChannelSetting(true);
     const handleCloseChannelSetting = () => setModalChannelSetting(false);
@@ -107,6 +109,7 @@ function Channel() {
                                         <ListItem
                                             sx={{ pl: 4, cursor: 'pointer' }}
                                             onClick={() => {
+                                                socket.emit('room:leave', currentChannel?._id);
                                                 dispatch(changeChannel(data[0]));
                                                 dispatch(
                                                     getChannelMessage({ currentChannel: data[0]?._id, paging: 1 }),
@@ -198,7 +201,11 @@ function Channel() {
                                         <ListItem
                                             sx={{ pl: 4, cursor: 'pointer' }}
                                             onClick={() => {
+                                                socket.emit('room:leave', currentChannel?._id);
                                                 dispatch(changeChannel(data[0]));
+                                                dispatch(
+                                                    getChannelMessage({ currentChannel: data[0]?._id, paging: 1 }),
+                                                );
                                             }}
                                         >
                                             <VolumeUpIcon sx={{ color: 'rgb(150,152,157)', fontSize: 25 }} />

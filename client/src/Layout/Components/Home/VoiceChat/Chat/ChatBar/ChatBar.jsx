@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { useDispatch, useSelector } from 'react-redux';
-import { getChannelMessage, sendMessage } from '~/features/message/messageSlice';
+import { getChannelMessage, getNewMessage, sendMessage } from '~/features/message/messageSlice';
 import EmojiEmotionsIcon from '@mui/icons-material/EmojiEmotions';
 import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
 import GifBoxIcon from '@mui/icons-material/GifBox';
@@ -58,6 +58,7 @@ function ChatBar(props) {
     const { currentUser } = useSelector((state) => state.auth);
     const [Images, setImages] = useState([]);
     const [Message, setMessage] = useState('');
+    const messageData = useSelector((state) => state.message.data);
     const onDrop = useCallback((acceptedFiles) => {
         const array = Images;
         array.push(acceptedFiles);
@@ -83,13 +84,20 @@ function ChatBar(props) {
             setImages([]);
             console.log(actionResult);
             socket.emit('newMessage', {
-                ...actionResult.meta.arg,
-                senderId: currentUser.data?._id,
-                inChat: currentChannel.inChat,
+                newMessage: { ...actionResult.payload.result },
+                user: currentUser.data,
+                channel: currentChannel,
             });
-            divRef.current?.scrollIntoView({ behavior: 'smooth' });
         }
     };
+    useEffect(() => {
+        divRef.current?.scrollIntoView({ behavior: 'smooth' });
+    }, [messageData]);
+    useEffect(() => {
+        socket.on('message Received', (data) => {
+            dispatch(getNewMessage({ ...data.newMessage, User: [data.user] }));
+        });
+    }, [socket]);
     return (
         <div
             style={{
