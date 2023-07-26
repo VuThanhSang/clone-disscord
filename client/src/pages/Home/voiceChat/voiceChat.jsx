@@ -71,9 +71,7 @@ function VoiceChat(props) {
             }
         }
     }, [channelName, client, ready, tracks]);
-    useEffect(() => {
-        dispatch(joinChannel(currentChannel?._id));
-    }, []);
+    useEffect(() => {}, []);
     return (
         <Grid container direction="column" style={{ height: '100%', backgroundColor: 'black' }}>
             <Grid item sx={{ height: '5%', padding: 2, display: 'flex', justifyContent: 'space-between' }}>

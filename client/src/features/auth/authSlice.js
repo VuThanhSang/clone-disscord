@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { useDispatch } from 'react-redux';
 import * as authApi from '~/api/authApi/authApi';
+import * as userApi from '~/api/userApi/userApi';
 import { clearServer } from '~/features/server/serverSlice';
 import { clearMessage } from '~/features/message/messageSlice';
 
@@ -18,7 +19,11 @@ export const getUserInfo = createAsyncThunk('auth/getUserInfo', async (params, t
     const res = await authApi.getUserInfo();
     return res;
 });
-
+export const updateUser = createAsyncThunk('user/update', async (params, thunkAPI) => {
+    console.log(params);
+    const res = await userApi.updateUser(params);
+    return res;
+});
 export const logout = createAsyncThunk('auth/logout', async (params, thunkAPI) => {});
 export const authSlice = createSlice({
     name: 'auth',
@@ -86,6 +91,19 @@ export const authSlice = createSlice({
         builder.addCase(logout.fulfilled, (state, action) => {
             state.loading = false;
             state.currentUser = null;
+            state.typeLogin = '';
+        });
+
+        builder.addCase(updateUser.pending, (state, action) => {
+            state.loading = true;
+        });
+        builder.addCase(updateUser.rejected, (state, action) => {
+            state.loading = false;
+            state.error = action.error;
+        });
+        builder.addCase(updateUser.fulfilled, (state, action) => {
+            state.loading = false;
+            state.currentUser = { data: action.payload.result };
             state.typeLogin = '';
         });
     },

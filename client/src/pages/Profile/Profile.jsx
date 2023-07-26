@@ -1,21 +1,36 @@
 import classNames from 'classnames/bind';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import styles from './Profile.module.scss';
 import Tab from '@mui/material/Tab';
 import TabContext from '@mui/lab/TabContext';
 import TabList from '@mui/lab/TabList';
 import TabPanel from '@mui/lab/TabPanel';
-import { Box, Button } from '@mui/material';
+import { Avatar, Box, Button, Card, CardHeader, InputBase } from '@mui/material';
 import { ChromePicker } from 'react-color';
+import { useDispatch, useSelector } from 'react-redux';
+import { updateUser } from '~/features/auth/authSlice';
 const cx = classNames.bind(styles);
 
 function Profile() {
     const [tabValue, setTabValue] = useState('1');
-
+    const { currentUser } = useSelector((state) => state.auth);
+    const dispatch = useDispatch();
+    const [username, setUsername] = useState('');
     const handleTabChange = (event, newValue) => {
         setTabValue(newValue);
     };
 
+    const inputRef = useRef();
+
+    const handleUpload = (e) => {
+        inputRef.current.click();
+    };
+    const updateAvatarHandler = (e) => {
+        const formData = new FormData();
+        formData.append('file', e.target.files[0]);
+        formData.append('intro', '1');
+        dispatch(updateUser(formData));
+    };
     return (
         <div className={cx('wrapper')}>
             <div className={cx('container')}>
@@ -31,36 +46,74 @@ function Profile() {
                         <TabPanel value="1">
                             <div className={cx('tab-content')}>
                                 <div className={cx('update')}>
-                                    <h5>Avatar</h5>
-                                    <div className={cx('set-avatar')}>
-                                        <Button
-                                            variant="contained"
-                                            sx={{ color: '#fff', fontSize: 12, width: 150, height: 30 }}
-                                        >
-                                            Change Avatar
-                                        </Button>
-                                        <p>Remove Avatar</p>
+                                    <div>
+                                        <h5>Display Name</h5>
+                                        <div className={cx('set-avatar')}>
+                                            <InputBase
+                                                sx={{
+                                                    ml: 1,
+                                                    flex: 1,
+                                                    backgroundColor: '#1e1f22',
+                                                    color: 'white',
+                                                    fontSize: 12,
+                                                    marginRight: 1,
+                                                    paddingLeft: 1,
+                                                }}
+                                                onChange={(e) => {
+                                                    setUsername(e.target.value);
+                                                }}
+                                                placeholder={currentUser.data.username}
+                                            />
+                                            <Button
+                                                variant="contained"
+                                                sx={{ color: '#fff', fontSize: 9, width: 100, height: 30 }}
+                                                onClick={(e) => {
+                                                    dispatch(updateUser({ username: username }));
+                                                }}
+                                            >
+                                                Save
+                                            </Button>
+                                        </div>
+                                        <div className={cx('slash')}></div>
                                     </div>
-                                    <div className={cx('slash')}></div>
-                                    <h5>Banner color</h5>
-                                    <div className={cx('slash')}></div>
-                                    <h5>About Me</h5>
-                                    <p style={{ fontSize: 12, color: '#b8b9bf' }}>
-                                        You can use markdown and links if you're like
-                                    </p>
 
-                                    <textarea
-                                        rows="20"
-                                        name="comment[text]"
-                                        id="comment_text"
-                                        cols="40"
-                                        class="ui-autocomplete-input"
-                                        autocomplete="off"
-                                        aria-autocomplete="list"
-                                        aria-haspopup="true"
-                                    ></textarea>
+                                    <div>
+                                        <h5>Avatar</h5>
+                                        <div className={cx('set-avatar')}>
+                                            <input
+                                                ref={inputRef}
+                                                type="file"
+                                                onChange={updateAvatarHandler}
+                                                style={{ display: 'none' }}
+                                            />
+                                            <Button
+                                                variant="contained"
+                                                sx={{ color: '#fff', fontSize: 12, width: 150, height: 30 }}
+                                                onClick={handleUpload}
+                                            >
+                                                Change Avatar
+                                            </Button>
+                                            <p>Remove Avatar</p>
+                                        </div>
+                                        <div className={cx('slash')}></div>
+                                    </div>
                                 </div>
-                                <div className={cx('display')}></div>
+
+                                <div className={cx('display')}>
+                                    <Card sx={{ maxWidth: 345, margin: 5, backgroundColor: '#232428', color: 'white' }}>
+                                        <CardHeader
+                                            avatar={
+                                                <Avatar
+                                                    src={currentUser.data.avatar.data}
+                                                    sx={{ width: 40, height: 40 }}
+                                                    aria-label="recipe"
+                                                ></Avatar>
+                                            }
+                                            title={currentUser.data.username}
+                                            subheader={'#' + currentUser.data.username}
+                                        />
+                                    </Card>
+                                </div>
                             </div>
                         </TabPanel>
                         <TabPanel value="2">Item Two</TabPanel>

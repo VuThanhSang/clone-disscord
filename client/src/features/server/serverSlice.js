@@ -52,7 +52,9 @@ export const serverSlice = createSlice({
             state.currentChannel = action.payload;
         },
         changeServer: (state, action) => {
+            console.log(action.payload);
             state.currentServer = action.payload;
+            state.currentChannel = action.payload.channel[0][0];
         },
     },
     extraReducers: (builder) => {

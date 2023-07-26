@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { changeChannel, changeServer, getListServer } from '~/features/server/serverSlice';
 import styles from './Sidebar.module.scss';
 import CreateServer from './CreateServer';
+import { getChannelMessage } from '~/features/message/messageSlice';
 
 const cx = classNames.bind(styles);
 
@@ -41,7 +42,8 @@ function Sidebar() {
                                 alt="none"
                                 onClick={(e) => {
                                     dispatch(changeServer(data));
-                                    dispatch(changeChannel(data.channel[0][0]));
+                                    console.log(data.channel[0][0]._id);
+                                    dispatch(getChannelMessage({ currentChannel: data.channel[0][0]?._id, paging: 1 }));
                                 }}
                             />
                         </Tooltip>
