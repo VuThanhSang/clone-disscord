@@ -3,15 +3,13 @@ import classNames from 'classnames/bind';
 import styles from './ChatArena.module.scss';
 import MemberList from '../../../Layout/Components/Home/MemberList';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import io from 'socket.io-client';
 import ChatBar from '~/Layout/Components/Home/Chat/ChatBar';
 import MessageBox from '~/Layout/Components/Home/Chat/MessageBox/MessageBox';
 import { useDispatch, useSelector } from 'react-redux';
 import { joinChannel } from '~/features/server/serverSlice';
 import { getChannelMessage } from '~/features/message/messageSlice';
 import { useSocket } from '~/utils/socketProvider';
-const ENDPOINT = 'http://localhost:3240';
-var socket, seletedChatCompare;
+var socket;
 const cx = classNames.bind(styles);
 
 function ChatArena() {
@@ -30,7 +28,6 @@ function ChatArena() {
     // }, []);
     //update while change channel
     useEffect(() => {
-        dispatch(joinChannel(currentChannel?._id));
         socket.emit('room:join', { user: currentUser.data, channel: currentChannel });
     }, [currentChannel]);
     useEffect(() => {
